@@ -1,0 +1,11 @@
+:root {
+  --button-inverted: rgb(255, 234, 0); /* Red button background */
+  --button-inverted-hover: rgb(0, 38, 255);
+  --fg-base: rgba(0, 0, 0, 1); /* Black font color */
+  --fg-primary: rgb(255, 0, 0);
+  --contrast-fg-primary: rgb(0,0,0);
+}
+
+[data-mode="dark"] {
+  --button-inverted: rgba(0, 255, 0, 1); /* Green button background in dark mode */
+}

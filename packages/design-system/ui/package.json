@@ -23,13 +23,12 @@
       }
     }
   },
-  "sideEffects": false,
   "files": [
     "dist/**",
     "styles.css"
   ],
   "scripts": {
-    "build": "yarn clean && yarn build:js:cjs && yarn build:js:esm",
+    "build": "yarn clean && yarn build:js:cjs && yarn build:js:esm && mkdir -p dist/styles && cp src/styles/custom-theme.css dist/styles/custom-theme.css",
     "build:js:cjs": "tsc --project tsconfig.cjs.json && tsc-alias -p tsconfig.cjs.json",
     "build:js:esm": "tsc --project tsconfig.esm.json && tsc-alias -p tsconfig.esm.json",
     "clean": "rimraf dist",
