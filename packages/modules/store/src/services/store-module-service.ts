@@ -49,23 +49,61 @@ export default class StoreModuleService
     this.storeService_ = storeService
   }
 
+  // Multi-tenancy helper method to get stores by user
+  async retrieveStoresByUserId(
+    userId: string,
+    config?: { relations?: string[] },
+    sharedContext?: Context
+  ): Promise<StoreTypes.StoreDTO[]> {
+    return await this.listStores(
+      { user_id: userId },
+      { relations: config?.relations || ["supported_currencies"] },
+      sharedContext
+    )
+  }
+
+  // Override listStores to add user_id filtering capability
+  listStores = async (
+    filters: StoreTypes.FilterableStoreProps & { user_id?: string } = {},
+    config: { relations?: string[] } = {},
+    sharedContext?: Context
+  ): Promise<StoreTypes.StoreDTO[]> => {
+    const stores = await this.storeService_.list(
+      filters,
+      { relations: config.relations || [] },
+      sharedContext
+    )
+
+    return await this.baseRepository_.serialize<StoreTypes.StoreDTO[]>(stores)
+  }
+
   // @ts-expect-error
   async createStores(
-    data: StoreTypes.CreateStoreDTO[],
+    data: (StoreTypes.CreateStoreDTO & { user_id: string })[],
     sharedContext?: Context
   ): Promise<StoreTypes.StoreDTO[]>
   // @ts-expect-error
   async createStores(
-    data: StoreTypes.CreateStoreDTO,
+    data: StoreTypes.CreateStoreDTO & { user_id: string },
     sharedContext?: Context
   ): Promise<StoreTypes.StoreDTO>
   @InjectManager()
   // @ts-expect-error
   async createStores(
-    data: StoreTypes.CreateStoreDTO | StoreTypes.CreateStoreDTO[],
+    data: (StoreTypes.CreateStoreDTO & { user_id: string }) | (StoreTypes.CreateStoreDTO & { user_id: string })[],
     @MedusaContext() sharedContext: Context = {}
   ): Promise<StoreTypes.StoreDTO | StoreTypes.StoreDTO[]> {
     const input = Array.isArray(data) ? data : [data]
+
+    // Validate that user_id is provided for all stores
+    for (const store of input) {
+      if (!store.user_id) {
+        throw new MedusaError(
+          MedusaError.Types.INVALID_DATA,
+          "user_id is required for store creation"
+        )
+      }
+    }
 
     const result = await this.create_(input, sharedContext)
 
@@ -76,7 +114,7 @@ export default class StoreModuleService
 
   @InjectTransactionManager()
   async create_(
-    data: StoreTypes.CreateStoreDTO[],
+    data: (StoreTypes.CreateStoreDTO & { user_id: string })[],
     @MedusaContext() sharedContext: Context = {}
   ): Promise<InferEntityType<typeof Store>[]> {
     let normalizedInput = StoreModuleService.normalizeInput(data)
@@ -92,25 +130,35 @@ export default class StoreModuleService
   }
 
   async upsertStores(
-    data: StoreTypes.UpsertStoreDTO[],
+    data: (StoreTypes.UpsertStoreDTO & { user_id?: string })[],
     sharedContext?: Context
   ): Promise<StoreTypes.StoreDTO[]>
   async upsertStores(
-    data: StoreTypes.UpsertStoreDTO,
+    data: StoreTypes.UpsertStoreDTO & { user_id?: string },
     sharedContext?: Context
   ): Promise<StoreTypes.StoreDTO>
   @InjectTransactionManager()
   async upsertStores(
-    data: StoreTypes.UpsertStoreDTO | StoreTypes.UpsertStoreDTO[],
+    data: (StoreTypes.UpsertStoreDTO & { user_id?: string }) | (StoreTypes.UpsertStoreDTO & { user_id?: string })[],
     @MedusaContext() sharedContext: Context = {}
   ): Promise<StoreTypes.StoreDTO | StoreTypes.StoreDTO[]> {
     const input = Array.isArray(data) ? data : [data]
     const forUpdate = input.filter(
-      (store): store is UpdateStoreInput => !!store.id
+      (store): store is UpdateStoreInput & { user_id?: string } => !!store.id
     )
     const forCreate = input.filter(
-      (store): store is StoreTypes.CreateStoreDTO => !store.id
+      (store): store is StoreTypes.CreateStoreDTO & { user_id: string } => !store.id
     )
+
+    // Validate user_id for new stores
+    for (const store of forCreate) {
+      if (!store.user_id) {
+        throw new MedusaError(
+          MedusaError.Types.INVALID_DATA,
+          "user_id is required for store creation"
+        )
+      }
+    }
 
     const operations: Promise<InferEntityType<typeof Store>[]>[] = []
 
@@ -135,18 +183,18 @@ export default class StoreModuleService
   ): Promise<StoreTypes.StoreDTO>
   // @ts-expect-error
   async updateStores(
-    selector: StoreTypes.FilterableStoreProps,
+    selector: StoreTypes.FilterableStoreProps & { user_id?: string },
     data: StoreTypes.UpdateStoreDTO,
     sharedContext?: Context
   ): Promise<StoreTypes.StoreDTO[]>
   @InjectManager()
   // @ts-expect-error
   async updateStores(
-    idOrSelector: string | StoreTypes.FilterableStoreProps,
+    idOrSelector: string | (StoreTypes.FilterableStoreProps & { user_id?: string }),
     data: StoreTypes.UpdateStoreDTO,
     @MedusaContext() sharedContext: Context = {}
   ): Promise<StoreTypes.StoreDTO | StoreTypes.StoreDTO[]> {
-    let normalizedInput: UpdateStoreInput[] = []
+    let normalizedInput: (UpdateStoreInput & { user_id?: string })[] = []
     if (isString(idOrSelector)) {
       normalizedInput = [{ id: idOrSelector, ...data }]
     } else {
@@ -171,9 +219,51 @@ export default class StoreModuleService
     return isString(idOrSelector) ? stores[0] : stores
   }
 
+  // Multi-tenancy method to update stores with user ownership validation
+  async updateStoresByUserId(
+    userId: string,
+    storeId: string,
+    data: StoreTypes.UpdateStoreDTO,
+    sharedContext?: Context
+  ): Promise<StoreTypes.StoreDTO> {
+    // First verify the store belongs to the user
+    const stores = await this.retrieveStoresByUserId(userId, {}, sharedContext)
+    const store = stores.find(s => s.id === storeId)
+    
+    if (!store) {
+      throw new MedusaError(
+        MedusaError.Types.NOT_FOUND,
+        `Store with id ${storeId} not found for user ${userId}`
+      )
+    }
+
+    return await this.updateStores(storeId, data, sharedContext)
+  }
+
+  // Multi-tenancy method to delete stores with user ownership validation
+  async deleteStoresByUserId(
+    userId: string,
+    storeIds: string[],
+    sharedContext?: Context
+  ): Promise<void> {
+    // Verify all stores belong to the user
+    const userStores = await this.retrieveStoresByUserId(userId, {}, sharedContext)
+    const userStoreIds = userStores.map(s => s.id)
+    
+    const unauthorizedStores = storeIds.filter(id => !userStoreIds.includes(id))
+    if (unauthorizedStores.length > 0) {
+      throw new MedusaError(
+        MedusaError.Types.NOT_ALLOWED,
+        `Unauthorized access to stores: ${unauthorizedStores.join(", ")}`
+      )
+    }
+
+    await this.deleteStores(storeIds, sharedContext)
+  }
+
   @InjectTransactionManager()
   protected async update_(
-    data: UpdateStoreInput[],
+    data: (UpdateStoreInput & { user_id?: string })[],
     @MedusaContext() sharedContext: Context = {}
   ): Promise<InferEntityType<typeof Store>[]> {
     const normalizedInput = StoreModuleService.normalizeInput(data)
@@ -188,7 +278,7 @@ export default class StoreModuleService
     ).entities
   }
 
-  private static normalizeInput<T extends StoreTypes.UpdateStoreDTO>(
+  private static normalizeInput<T extends StoreTypes.UpdateStoreDTO & { user_id?: string }>(
     stores: T[]
   ): T[] {
     return stores.map((store) =>
@@ -199,14 +289,30 @@ export default class StoreModuleService
           currency_code: c.currency_code.toLowerCase(),
         })),
         name: store.name?.trim(),
+        user_id: store.user_id?.trim(), // Normalize user_id
       })
     )
   }
 
   private static validateCreateRequest(
-    stores: StoreTypes.CreateStoreDTO[] | StoreTypes.UpdateStoreDTO[]
+    stores: (StoreTypes.CreateStoreDTO & { user_id?: string })[] | (StoreTypes.UpdateStoreDTO & { user_id?: string })[]
   ) {
     for (const store of stores) {
+      // Validate user_id for new stores
+      // Check if store has 'id' key safely
+      if ("id" in store) {
+        // It's an UpdateStoreDTO, id is allowed to be missing here
+        continue
+      }
+
+      // If 'id' does not exist, it's a CreateStoreDTO → Validate user_id is present
+      if (!store.user_id) {
+        throw new MedusaError(
+          MedusaError.Types.INVALID_DATA,
+          "user_id is required for store creation"
+        )
+      }
+
       if (store.supported_currencies?.length) {
         const duplicates = getDuplicates(
           store.supported_currencies?.map((c) => c.currency_code)
@@ -242,7 +348,7 @@ export default class StoreModuleService
     }
   }
 
-  private static validateUpdateRequest(stores: UpdateStoreInput[]) {
+  private static validateUpdateRequest(stores: (UpdateStoreInput & { user_id?: string })[]) {
     StoreModuleService.validateCreateRequest(stores)
   }
 }

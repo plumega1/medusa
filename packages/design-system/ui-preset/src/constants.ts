@@ -28,5 +28,5 @@ const tailwindFontFamily = {
   ],
 }
 
-export const FONT_FAMILY_SANS = ["Inter", ...tailwindFontFamily.sans]
+export const FONT_FAMILY_SANS = ["DM Sans", "Inter", ...tailwindFontFamily.sans]
 export const FONT_FAMILY_MONO = ["Roboto Mono", ...tailwindFontFamily.mono]

@@ -94,6 +94,7 @@ export interface FilterableStoreProps
    * The IDs to filter the stores by.
    */
   id?: string | string[]
+  user_id?: string | string[]
 
   /**
    * Filter stores by their names.

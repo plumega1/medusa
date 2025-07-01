@@ -9,6 +9,7 @@ const Store = model
     default_region_id: model.text().nullable(),
     default_location_id: model.text().nullable(),
     metadata: model.json().nullable(),
+    user_id: model.text().nullable(), // Add this line
     supported_currencies: model.hasMany(() => StoreCurrency, {
       mappedBy: "store",
     }),

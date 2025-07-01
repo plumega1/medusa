@@ -729,6 +729,7 @@ module.exports = {
     },
     fontFamily: {
       base: [
+        "DM Sans",
         "var(--font-inter)",
         "Inter",
         "BlinkMacSystemFont",
