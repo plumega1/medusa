@@ -10,7 +10,7 @@ async function startDevServer() {
     NODE_ENV: "development",
     JWT_SECRET: process.env.JWT_SECRET || "your-jwt-secret-here",
     COOKIE_SECRET: process.env.COOKIE_SECRET || "your-cookie-secret-here",
-    DATABASE_URL: process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/medusa-source-store",
+    DATABASE_URL: process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/medusa-bys",
     MEDUSA_ADMIN_ONBOARDING_TYPE: "default",
     MEDUSA_ADMIN_ONBOARDING_NEXTJS: false,
     STORE_CORS: "http://localhost:8000,http://localhost:5173",
