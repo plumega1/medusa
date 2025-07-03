@@ -291,6 +291,15 @@ export class RedisDistributedTransactionStorage
       .catch(() => undefined)
 
     if (trx) {
+      const rawData = await this.redisClient.get(key)
+
+      let flow!: TransactionFlow, errors!: TransactionStepError[]
+      if (rawData) {
+        const data = JSON.parse(rawData)
+        flow = data.flow
+        errors = data.errors
+      }
+
       const { idempotent } = options ?? {}
       const execution = trx.execution as TransactionFlow
 
@@ -317,9 +326,9 @@ export class RedisDistributedTransactionStorage
       }
 
       return {
-        flow: trx.execution as TransactionFlow,
+        flow: flow ?? (trx.execution as TransactionFlow),
         context: trx.context?.data as TransactionContext,
-        errors: trx.context?.errors as TransactionStepError[],
+        errors: errors ?? (trx.context?.errors as TransactionStepError[]),
       }
     }
 

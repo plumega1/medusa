@@ -8,7 +8,7 @@ import {
 import path from "path"
 import { ContainerRegistrationKeys } from "@medusajs/utils"
 
-jest.setTimeout(300000)
+jest.setTimeout(100000)
 
 medusaIntegrationTestRunner({
   medusaConfigFile: path.join(__dirname, "../../../__fixtures__/auth"),

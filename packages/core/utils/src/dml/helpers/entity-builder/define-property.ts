@@ -80,6 +80,7 @@ const SPECIAL_PROPERTIES: {
       nullable: false,
       fieldName: field.fieldName,
       defaultRaw: "now()",
+      onCreate: () => new Date(),
     })(MikroORMEntity.prototype, field.fieldName)
   },
   updated_at: (MikroORMEntity, field) => {
@@ -89,6 +90,8 @@ const SPECIAL_PROPERTIES: {
       nullable: false,
       fieldName: field.fieldName,
       defaultRaw: "now()",
+      onCreate: () => new Date(),
+      onUpdate: () => new Date(),
     })(MikroORMEntity.prototype, field.fieldName)
   },
   deleted_at: (MikroORMEntity, field, tableName) => {

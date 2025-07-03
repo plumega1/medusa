@@ -23,6 +23,11 @@ export const sidebars = [
             title: "Architecture",
             path: "/learn/introduction/architecture",
           },
+          {
+            type: "link",
+            title: "AI Assistants and LLMs",
+            path: "/learn/introduction/build-with-llms-ai",
+          },
         ],
       },
       {

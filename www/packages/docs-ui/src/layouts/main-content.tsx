@@ -71,7 +71,8 @@ export const MainContentLayout = ({
           className={clsx(
             "pt-docs_4 lg:pt-docs_6 pb-docs_8 lg:pb-docs_4",
             showContentMenu &&
-              "grid grid-cols-1 lg:mx-auto lg:grid-cols-[1fr_221px]",
+              "grid grid-cols-1 lg:mx-auto",
+            desktopSidebarOpen && "lg:grid-cols-[1fr_221px]",
             chatOpened && showCollapsedNavbar && "pl-docs_1",
             contentClassName
           )}

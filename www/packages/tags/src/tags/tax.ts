@@ -8,6 +8,10 @@ export const tax = [
     "path": "https://docs.medusajs.com/resources/commerce-modules/product/guides/price-with-taxes"
   },
   {
+    "title": "Tax-Inclusive Promotions",
+    "path": "https://docs.medusajs.com/resources/commerce-modules/promotion/promotion-taxes"
+  },
+  {
     "title": "Example: Show Price with Taxes",
     "path": "https://docs.medusajs.com/resources/storefront-development/products/price/examples/tax-price"
   },

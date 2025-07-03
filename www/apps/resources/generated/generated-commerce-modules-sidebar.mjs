@@ -6090,6 +6090,14 @@ const generatedgeneratedCommerceModulesSidebarSidebar = {
               "loaded": true,
               "isPathHref": true,
               "type": "ref",
+              "title": "Add Gift Message",
+              "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/gift-message",
+              "children": []
+            },
+            {
+              "loaded": true,
+              "isPathHref": true,
+              "type": "ref",
               "title": "Implement Loyalty Points",
               "path": "https://docs.medusajs.com/resources/how-to-tutorials/tutorials/loyalty-points",
               "children": []
@@ -13086,6 +13094,14 @@ const generatedgeneratedCommerceModulesSidebarSidebar = {
               "type": "link",
               "path": "/commerce-modules/promotion/concepts",
               "title": "Promotion",
+              "children": []
+            },
+            {
+              "loaded": true,
+              "isPathHref": true,
+              "type": "link",
+              "path": "/commerce-modules/promotion/promotion-taxes",
+              "title": "Tax-Inclusive Promotions",
               "children": []
             },
             {

@@ -14804,7 +14804,7 @@ export default async function helloWorldLoader({
 
 ## Validate Module Options
 
-If you expect a certain option and want to throw an error if it's not provided or isn't valid, it's recommended to perform the validation in a loader. The module's service is only instantiated when it's used, whereas the loader runs the when the Medusa application starts.
+If you expect a certain option and want to throw an error if it's not provided or isn't valid, it's recommended to perform the validation in a loader. The module's service is only instantiated when it's used, whereas the loader runs when the Medusa application starts.
 
 So, by performing the validation in the loader, you ensure you can throw an error at an early point, rather than when the module is used.
 
@@ -18737,6 +18737,67 @@ The following diagram illustrates Medusa's architecture including all its layers
 ![Full diagram illustrating Medusa's architecture combining all the different layers.](https://res.cloudinary.com/dza7lstvk/image/upload/v1727174897/Medusa%20Book/architectural-diagram-full.jpg)
 
 
+# Build with AI Assistants and LLMs
+
+In this chapter, you'll learn how you can use AI assistants and LLMs effectively in your Medusa development.
+
+## AI Assistant in Documentation
+
+The Medusa documentation is equipped with an AI Assistant that can answer your questions and help you build customizations with Medusa.
+
+### Open the AI Assistant
+
+To open the AI Assistant, either:
+
+- Use the keyboard shortcut `Ctrl + I` for Windows/Linux, or `Cmd + I` for macOS.
+- Click the <InlineIcon Icon={AiAssistent} alt="AI Assistant" /> icon in the top right corner of the documentation.
+
+You can then ask the AI Assistant any questions about Medusa, such as:
+
+- What is a workflow?
+- How to create a product review module?
+- How to update Medusa?
+- How to fix this error?
+
+The AI Assistant will provide you with relevant documentation links, code snippets, and explanations to help you with your development.
+
+### Ask About Code Snippets
+
+While browsing the documentation, you'll find a <InlineIcon Icon={AiAssistentLuminosity} alt="AI Assistant" /> icon in the header of code snippets. You can click this icon to ask the AI Assistant about the code snippet.
+
+The AI Assistant will analyze the code and provide explanations, usage examples, and any additional information you need to understand how the code works.
+
+### Ask About Documentation Pages
+
+If you need more help understanding a specific documentation page, you can click the "Explain with AI Assistant" link in the page's right sidebar. This will open the AI Assistant and provide context about the current page, allowing you to ask questions related to the content.
+
+### Formatting and Code Blocks
+
+In your questions to the AI Assistant, you can format code blocks by wrapping them in triple backticks (\`\`\`). For example:
+
+````markdown
+```
+console.log("Hello, World!")
+```
+````
+
+You can add new lines using the `Shift + Enter` shortcut.
+
+***
+
+## Plain Text Documentation
+
+The Medusa documentation is available in plain text format, which allows LLMs and AI tools to easily parse and understand the content.
+
+You can access the following plain text documentation files:
+
+- [llms.txt](https://docs.medusajs.com/llms.txt/index.html.md) - Contains a short structure of links to important documentation pages.
+- [llms-full.txt](https://docs.medusajs.com/llms-full.txt/index.html.md) - Contains the full documentation content, including all pages and sections.
+- **Markdown version of any page** - You can access the Markdown version of any documentation page by appending `/index.html.md` to the page URL. For example, the plain text content of the current page is available at [https://docs.medusajs.com/learn/introduction/build-with-llms-ai/index.html.md](https://docs.medusajs.com/learn/introduction/build-with-llms-ai/index.html.md).
+
+You can provide these files to your AI tools or LLM editors like [Cursor](https://docs.cursor.com/context/@-symbols/@-docs). This will help them understand the Medusa documentation and provide better assistance when building customizations or answering questions.
+
+
 # Introduction
 
 Medusa is a digital commerce platform with a built-in Framework for customization.
@@ -18790,10 +18851,6 @@ This documentation is split into the following sections:
 |Cloud|Learn about Cloud, our managed services offering for Medusa applications. Find guides on how to deploy your Medusa application, manage organizations, and more.|
 
 To get started, check out the [Installation chapter](https://docs.medusajs.com/learn/installation/index.html.md).
-
-### Using with LLM Editors
-
-This documentation provides an [llms-full.txt](https://docs.medusajs.com/llms-full.txt/index.html.md) file to support LLM editors. To access the documentation directly from your editor and benefit from code generation, add [https://docs.medusajs.com/llms-full.txt](https://docs.medusajs.com/llms-full.txt/index.html.md) as a custom documentation source in your LLM editor, such as [Cursor](https://docs.cursor.com/context/@-symbols/@-docs).
 
 ***
 
@@ -27751,6 +27808,14 @@ A region’s price preference’s `is_tax_inclusive`'s value takes higher preced
 - the selected price belongs to the region;
 - and the region has a price preference
 
+***
+
+## Tax-Inclusive Pricing with Promotions
+
+When you enable tax-inclusive prices for regions or currencies, this can impact how promotions are applied to the cart. So, it's recommended to enable tax-inclusiveness for promotions as well.
+
+Learn more in the [Tax-Inclusive Promotions](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/promotion/promotion-taxes/index.html.md) guide.
+
 
 # Calculate Product Variant Price with Taxes
 
@@ -28916,6 +28981,7 @@ export interface AddItemAdjustmentAction {
   amount: number
   code: string
   description?: string
+  is_tax_inclusive?: boolean
 }
 ```
 
@@ -29554,6 +29620,142 @@ export const config = {
 Learn more about workflows in [this documentation](https://docs.medusajs.com/docs/learn/fundamentals/workflows/index.html.md).
 
 ***
+
+
+# Tax-Inclusive Promotions
+
+In this guide, you’ll learn how taxes are applied to promotions in a cart.
+
+This feature is available from [Medusa v2.8.5](https://github.com/medusajs/medusa/releases/tag/v2.8.5).
+
+## What are Tax-Inclusive Promotions?
+
+By default, promotions are tax-exclusive, meaning that the discount amount is applied as-is to the cart before taxes are calculated and applied to the cart total.
+
+A tax-inclusive promotion is a promotion for which taxes are calculated from the discount amount entered by the merchant.
+
+When a promotion is tax-inclusive, the discount amount is reduced by the calculated tax amount based on the [tax region's rate](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/tax/tax-region/index.html.md). The reduced discount amount is then applied to the cart total.
+
+Tax-inclusiveness doesn't apply to Buy X Get Y promotions.
+
+### When to Use Tax-Inclusive Promotions
+
+Tax-inclusive promotions are most useful when using [tax-inclusive prices](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/pricing/tax-inclusive-pricing/index.html.md) for items in the cart.
+
+In this scenario, Medusa applies taxes consistently across the cart, ensuring that the total price reflects the taxes and promotions correctly.
+
+You can see this in action in the [examples below](#tax-inclusiveness-examples).
+
+***
+
+## What Makes a Promotion Tax-Inclusive?
+
+The [Promotion data model](https://docs.medusajs.com/references/promotion/models/Promotion/index.html.md) has an `is_tax_inclusive` property that determines whether the promotion is tax-inclusive.
+
+If `is_tax_inclusive` is disabled (which is the default), the promotion's discount amount will be applied as-is to the cart, before taxes are calculated. See an example in the [Tax-Exclusive Promotion Example](#tax-exclusive-promotion-example) section.
+
+If `is_tax_inclusive` is enabled, the promotion's discount amount will first be reduced by the calculated tax amount (based on the [tax region's rate](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/tax/tax-region/index.html.md)). The reduced discount amount is then applied to the cart total. See an example in the [Tax-Inclusive Promotion Example](#tax-inclusive-promotion-example) section.
+
+***
+
+## How to Set a Promotion as Tax-Inclusive
+
+You can enable tax-inclusiveness for a promotion when [creating it in the Medusa Admin](https://docs.medusajs.com/user-guide/promotions/create/index.html.md).
+
+You can set the `is_tax_inclusive` property when creating a promotion by using either the [Promotion workflows](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/promotion/workflows/index.html.md) or the [Promotion Module's service](https://docs.medusajs.com/references/promotion/index.html.md).
+
+For most use cases, it's recommended to use [workflows](https://docs.medusajs.com/docs/learn/fundamentals/workflows/index.html.md) instead of directly using the module's service, as they implement the necessary rollback mechanisms in case of errors.
+
+For example, if you're creating a promotion with the [createPromotionsWorkflow](https://docs.medusajs.com/references/medusa-workflows/createPromotionsWorkflow/index.html.md) in an API route:
+
+```ts highlights={[["17"]]}
+import type {
+  MedusaRequest,
+  MedusaResponse,
+} from "@medusajs/framework/http"
+import { createPromotionsWorkflow } from "@medusajs/medusa/core-flows"
+
+export async function POST(
+  req: MedusaRequest,
+  res: MedusaResponse
+) {
+  const { result } = await createPromotionsWorkflow(req.scope)
+    .run({
+      input: {
+        promotionsData: [{
+          code: "10OFF",
+          // ...
+          is_tax_inclusive: true,
+        }],
+      }
+    })
+
+  res.send(result)
+}
+```
+
+In the above example, you set the `is_tax_inclusive` property to `true` when creating the promotion, making it tax-inclusive.
+
+### Updating a Promotion's Tax-Inclusiveness
+
+A promotion's tax-inclusiveness cannot be updated after it has been created. If you need to change a promotion's tax-inclusiveness, you must delete the existing promotion and create a new one with the desired `is_tax_inclusive` value.
+
+***
+
+## Tax-Inclusiveness Examples
+
+The following sections provide examples of how tax-inclusive promotions work in different scenarios, including both tax-exclusive and tax-inclusive promotions.
+
+These examples will help you understand how tax-inclusive promotions affect the cart total, allowing you to decide when to use them effectively.
+
+### Tax-Exclusive Promotion Example
+
+Consider the following scenario:
+
+- A tax-exclusive promotion gives a `$10` discount on the cart's total.
+- The cart's tax region has a `25%` tax rate.
+- The cart total before applying the promotion is `$100`.
+- [The prices in the cart's tax region are tax-exclusive](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/pricing/tax-inclusive-pricing/index.html.md).
+
+The result:
+
+1. Apply `$10` discount to cart total: `$100` - `$10` = `$90`
+2. Calculate tax on discounted total: `$90` x `25%` = `$22.50`
+3. Final total: `$90` + `$22.50` = `$112.50`
+
+### Tax-Inclusive Promotion Example
+
+Consider the following scenario:
+
+- A tax-inclusive promotion gives a `$10` discount on the cart's total.
+- The cart's tax region has a `25%` tax rate.
+- The cart total before applying the promotion is `$100`.
+- [The prices in the cart's tax region are tax-exclusive](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/pricing/tax-inclusive-pricing/index.html.md).
+
+The result:
+
+1. Calculate actual discount (removing tax): `$10` ÷ `1.25` = `$8`
+2. Apply discount to cart total: `$100` - `$8` = `$92`
+3. Calculate tax on discounted total: `$92` x `25%` = `$23`
+4. Final total: `$92` + `$23` = `$115`
+
+### Tax-Inclusive Promotions with Tax-Inclusive Prices
+
+Consider the following scenario:
+
+- A tax-inclusive promotion gives a `$10` discount on the cart's total.
+- The cart's tax region has a `25%` tax rate.
+- The cart total before applying the promotion is `$100`.
+- [The prices in the cart's tax region are tax-inclusive](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/pricing/tax-inclusive-pricing/index.html.md).
+
+The result:
+
+1. Calculate actual discount (removing tax): `$10` ÷ `1.25` = `$8`
+2. Calculate cart total without tax: `$100` ÷ `1.25` = `$80`
+3. Apply discount to cart total without tax: `$80` - `$8` = `$72`
+4. Add tax back to total: `$72` x `1.25` = `$90`
+
+The final total is `$90`, which correctly applies both the tax-inclusive promotion and tax-inclusive pricing.
 
 
 # Links between Region Module and Other Modules
@@ -35120,6 +35322,38 @@ Connection to Redis in module 'workflow-engine-redis' established
 
 This documentation page includes the list of all events emitted by [Medusa's workflows](https://docs.medusajs.com/resources/medusa-workflows-reference/index.html.md).
 
+## Auth Events
+
+### Summary
+
+|Event|Description|
+|---|---|
+|auth.password\_reset|Emitted when a reset password token is generated. You can listen to this event
+to send a reset password email to the user or customer, for example.|
+
+### auth.password\_reset
+
+Emitted when a reset password token is generated. You can listen to this event
+to send a reset password email to the user or customer, for example.
+
+#### Payload
+
+```ts
+{
+  entity_id, // The identifier of the user or customer. For example, an email address.
+  actor_type, // The type of actor. For example, "customer", "user", or custom.
+  token, // The generated token.
+}
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [generateResetPasswordTokenWorkflow](https://docs.medusajs.com/references/medusa-workflows/generateResetPasswordTokenWorkflow/index.html.md)
+
+***
+
 ## Cart Events
 
 ### Summary
@@ -35286,6 +35520,226 @@ The following workflows emit this event when they're executed. These workflows a
 
 - [deleteCustomersWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteCustomersWorkflow/index.html.md)
 - [removeCustomerAccountWorkflow](https://docs.medusajs.com/references/medusa-workflows/removeCustomerAccountWorkflow/index.html.md)
+
+***
+
+## Fulfillment Events
+
+### Summary
+
+|Event|Description|
+|---|---|
+|shipment.created|Emitted when a shipment is created for an order.|
+|delivery.created|Emitted when a fulfillment is marked as delivered.|
+
+### shipment.created
+
+Emitted when a shipment is created for an order.
+
+#### Payload
+
+```ts
+{
+  id, // the ID of the shipment
+  no_notification, // (boolean) whether to notify the customer
+}
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [createOrderShipmentWorkflow](https://docs.medusajs.com/references/medusa-workflows/createOrderShipmentWorkflow/index.html.md)
+
+***
+
+### delivery.created
+
+Emitted when a fulfillment is marked as delivered.
+
+#### Payload
+
+```ts
+{
+  id, // the ID of the fulfillment
+}
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [markOrderFulfillmentAsDeliveredWorkflow](https://docs.medusajs.com/references/medusa-workflows/markOrderFulfillmentAsDeliveredWorkflow/index.html.md)
+
+***
+
+## Invite Events
+
+### Summary
+
+|Event|Description|
+|---|---|
+|invite.accepted|Emitted when an invite is accepted.|
+|invite.created|Emitted when invites are created. You can listen to this event
+to send an email to the invited users, for example.|
+|invite.deleted|Emitted when invites are deleted.|
+|invite.resent|Emitted when invites should be resent because their token was
+refreshed. You can listen to this event to send an email to the invited users,
+for example.|
+
+### invite.accepted
+
+Emitted when an invite is accepted.
+
+#### Payload
+
+```ts
+{
+  id, // The ID of the invite
+}
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [acceptInviteWorkflow](https://docs.medusajs.com/references/medusa-workflows/acceptInviteWorkflow/index.html.md)
+
+***
+
+### invite.created
+
+Emitted when invites are created. You can listen to this event
+to send an email to the invited users, for example.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the invite
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [createInvitesWorkflow](https://docs.medusajs.com/references/medusa-workflows/createInvitesWorkflow/index.html.md)
+
+***
+
+### invite.deleted
+
+Emitted when invites are deleted.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the invite
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [deleteInvitesWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteInvitesWorkflow/index.html.md)
+
+***
+
+### invite.resent
+
+Emitted when invites should be resent because their token was
+refreshed. You can listen to this event to send an email to the invited users,
+for example.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the invite
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [refreshInviteTokensWorkflow](https://docs.medusajs.com/references/medusa-workflows/refreshInviteTokensWorkflow/index.html.md)
+
+***
+
+## Order Edit Events
+
+### Summary
+
+|Event|Description|
+|---|---|
+|order-edit.requested|Emitted when an order edit is requested.|
+|order-edit.confirmed|Emitted when an order edit request is confirmed.|
+|order-edit.canceled|Emitted when an order edit request is canceled.|
+
+### order-edit.requested&#xA;
+
+Emitted when an order edit is requested.
+
+#### Payload
+
+```ts
+{
+  order_id, // The ID of the order
+  actions, // (array) The [actions](https://docs.medusajs.com/resources/references/fulfillment/interfaces/fulfillment.OrderChangeActionDTO) to edit the order
+}
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [requestOrderEditRequestWorkflow](https://docs.medusajs.com/references/medusa-workflows/requestOrderEditRequestWorkflow/index.html.md)
+
+***
+
+### order-edit.confirmed&#xA;
+
+Emitted when an order edit request is confirmed.
+
+#### Payload
+
+```ts
+{
+  order_id, // The ID of the order
+  actions, // (array) The [actions](https://docs.medusajs.com/resources/references/fulfillment/interfaces/fulfillment.OrderChangeActionDTO) to edit the order
+}
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [confirmOrderEditRequestWorkflow](https://docs.medusajs.com/references/medusa-workflows/confirmOrderEditRequestWorkflow/index.html.md)
+
+***
+
+### order-edit.canceled&#xA;
+
+Emitted when an order edit request is canceled.
+
+#### Payload
+
+```ts
+{
+  order_id, // The ID of the order
+  actions, // (array) The [actions](https://docs.medusajs.com/resources/references/fulfillment/interfaces/fulfillment.OrderChangeActionDTO) to edit the order
+}
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [cancelBeginOrderEditWorkflow](https://docs.medusajs.com/references/medusa-workflows/cancelBeginOrderEditWorkflow/index.html.md)
 
 ***
 
@@ -35567,26 +36021,24 @@ The following workflows emit this event when they're executed. These workflows a
 
 ***
 
-## Order Edit Events
+## Payment Events
 
 ### Summary
 
 |Event|Description|
 |---|---|
-|order-edit.requested|Emitted when an order edit is requested.|
-|order-edit.confirmed|Emitted when an order edit request is confirmed.|
-|order-edit.canceled|Emitted when an order edit request is canceled.|
+|payment.captured|Emitted when a payment is captured.|
+|payment.refunded|Emitted when a payment is refunded.|
 
-### order-edit.requested&#xA;
+### payment.captured
 
-Emitted when an order edit is requested.
+Emitted when a payment is captured.
 
 #### Payload
 
 ```ts
 {
-  order_id, // The ID of the order
-  actions, // (array) The [actions](https://docs.medusajs.com/resources/references/fulfillment/interfaces/fulfillment.OrderChangeActionDTO) to edit the order
+  id, // the ID of the payment
 }
 ```
 
@@ -35594,20 +36046,21 @@ Emitted when an order edit is requested.
 
 The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
 
-- [requestOrderEditRequestWorkflow](https://docs.medusajs.com/references/medusa-workflows/requestOrderEditRequestWorkflow/index.html.md)
+- [capturePaymentWorkflow](https://docs.medusajs.com/references/medusa-workflows/capturePaymentWorkflow/index.html.md)
+- [processPaymentWorkflow](https://docs.medusajs.com/references/medusa-workflows/processPaymentWorkflow/index.html.md)
+- [markPaymentCollectionAsPaid](https://docs.medusajs.com/references/medusa-workflows/markPaymentCollectionAsPaid/index.html.md)
 
 ***
 
-### order-edit.confirmed&#xA;
+### payment.refunded
 
-Emitted when an order edit request is confirmed.
+Emitted when a payment is refunded.
 
 #### Payload
 
 ```ts
 {
-  order_id, // The ID of the order
-  actions, // (array) The [actions](https://docs.medusajs.com/resources/references/fulfillment/interfaces/fulfillment.OrderChangeActionDTO) to edit the order
+  id, // the ID of the payment
 }
 ```
 
@@ -35615,300 +36068,7 @@ Emitted when an order edit request is confirmed.
 
 The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
 
-- [confirmOrderEditRequestWorkflow](https://docs.medusajs.com/references/medusa-workflows/confirmOrderEditRequestWorkflow/index.html.md)
-
-***
-
-### order-edit.canceled&#xA;
-
-Emitted when an order edit request is canceled.
-
-#### Payload
-
-```ts
-{
-  order_id, // The ID of the order
-  actions, // (array) The [actions](https://docs.medusajs.com/resources/references/fulfillment/interfaces/fulfillment.OrderChangeActionDTO) to edit the order
-}
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [cancelBeginOrderEditWorkflow](https://docs.medusajs.com/references/medusa-workflows/cancelBeginOrderEditWorkflow/index.html.md)
-
-***
-
-## User Events
-
-### Summary
-
-|Event|Description|
-|---|---|
-|user.created|Emitted when users are created.|
-|user.updated|Emitted when users are updated.|
-|user.deleted|Emitted when users are deleted.|
-
-### user.created
-
-Emitted when users are created.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the user
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [createUsersWorkflow](https://docs.medusajs.com/references/medusa-workflows/createUsersWorkflow/index.html.md)
-- [createUserAccountWorkflow](https://docs.medusajs.com/references/medusa-workflows/createUserAccountWorkflow/index.html.md)
-- [acceptInviteWorkflow](https://docs.medusajs.com/references/medusa-workflows/acceptInviteWorkflow/index.html.md)
-
-***
-
-### user.updated
-
-Emitted when users are updated.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the user
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [updateUsersWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateUsersWorkflow/index.html.md)
-
-***
-
-### user.deleted
-
-Emitted when users are deleted.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the user
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [deleteUsersWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteUsersWorkflow/index.html.md)
-- [removeUserAccountWorkflow](https://docs.medusajs.com/references/medusa-workflows/removeUserAccountWorkflow/index.html.md)
-
-***
-
-## Invite Events
-
-### Summary
-
-|Event|Description|
-|---|---|
-|invite.accepted|Emitted when an invite is accepted.|
-|invite.created|Emitted when invites are created. You can listen to this event
-to send an email to the invited users, for example.|
-|invite.deleted|Emitted when invites are deleted.|
-|invite.resent|Emitted when invites should be resent because their token was
-refreshed. You can listen to this event to send an email to the invited users,
-for example.|
-
-### invite.accepted
-
-Emitted when an invite is accepted.
-
-#### Payload
-
-```ts
-{
-  id, // The ID of the invite
-}
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [acceptInviteWorkflow](https://docs.medusajs.com/references/medusa-workflows/acceptInviteWorkflow/index.html.md)
-
-***
-
-### invite.created
-
-Emitted when invites are created. You can listen to this event
-to send an email to the invited users, for example.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the invite
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [createInvitesWorkflow](https://docs.medusajs.com/references/medusa-workflows/createInvitesWorkflow/index.html.md)
-
-***
-
-### invite.deleted
-
-Emitted when invites are deleted.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the invite
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [deleteInvitesWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteInvitesWorkflow/index.html.md)
-
-***
-
-### invite.resent
-
-Emitted when invites should be resent because their token was
-refreshed. You can listen to this event to send an email to the invited users,
-for example.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the invite
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [refreshInviteTokensWorkflow](https://docs.medusajs.com/references/medusa-workflows/refreshInviteTokensWorkflow/index.html.md)
-
-***
-
-## Auth Events
-
-### Summary
-
-|Event|Description|
-|---|---|
-|auth.password\_reset|Emitted when a reset password token is generated. You can listen to this event
-to send a reset password email to the user or customer, for example.|
-
-### auth.password\_reset
-
-Emitted when a reset password token is generated. You can listen to this event
-to send a reset password email to the user or customer, for example.
-
-#### Payload
-
-```ts
-{
-  entity_id, // The identifier of the user or customer. For example, an email address.
-  actor_type, // The type of actor. For example, "customer", "user", or custom.
-  token, // The generated token.
-}
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [generateResetPasswordTokenWorkflow](https://docs.medusajs.com/references/medusa-workflows/generateResetPasswordTokenWorkflow/index.html.md)
-
-***
-
-## Sales Channel Events
-
-### Summary
-
-|Event|Description|
-|---|---|
-|sales-channel.created|Emitted when sales channels are created.|
-|sales-channel.updated|Emitted when sales channels are updated.|
-|sales-channel.deleted|Emitted when sales channels are deleted.|
-
-### sales-channel.created
-
-Emitted when sales channels are created.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the sales channel
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [createSalesChannelsWorkflow](https://docs.medusajs.com/references/medusa-workflows/createSalesChannelsWorkflow/index.html.md)
-
-***
-
-### sales-channel.updated
-
-Emitted when sales channels are updated.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the sales channel
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [updateSalesChannelsWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateSalesChannelsWorkflow/index.html.md)
-
-***
-
-### sales-channel.deleted
-
-Emitted when sales channels are deleted.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the sales channel
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [deleteSalesChannelsWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteSalesChannelsWorkflow/index.html.md)
+- [refundPaymentWorkflow](https://docs.medusajs.com/references/medusa-workflows/refundPaymentWorkflow/index.html.md)
 
 ***
 
@@ -36049,6 +36209,216 @@ Emitted when product collections are deleted.
 The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
 
 - [deleteCollectionsWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteCollectionsWorkflow/index.html.md)
+
+***
+
+## Product Option Events
+
+### Summary
+
+|Event|Description|
+|---|---|
+|product-option.updated|Emitted when product options are updated.|
+|product-option.created|Emitted when product options are created.|
+|product-option.deleted|Emitted when product options are deleted.|
+
+### product-option.updated
+
+Emitted when product options are updated.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the product option
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [updateProductOptionsWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateProductOptionsWorkflow/index.html.md)
+
+***
+
+### product-option.created
+
+Emitted when product options are created.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the product option
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [createProductOptionsWorkflow](https://docs.medusajs.com/references/medusa-workflows/createProductOptionsWorkflow/index.html.md)
+
+***
+
+### product-option.deleted
+
+Emitted when product options are deleted.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the product option
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [deleteProductOptionsWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteProductOptionsWorkflow/index.html.md)
+
+***
+
+## Product Tag Events
+
+### Summary
+
+|Event|Description|
+|---|---|
+|product-tag.updated|Emitted when product tags are updated.|
+|product-tag.created|Emitted when product tags are created.|
+|product-tag.deleted|Emitted when product tags are deleted.|
+
+### product-tag.updated
+
+Emitted when product tags are updated.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the product tag
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [updateProductTagsWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateProductTagsWorkflow/index.html.md)
+
+***
+
+### product-tag.created
+
+Emitted when product tags are created.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the product tag
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [createProductTagsWorkflow](https://docs.medusajs.com/references/medusa-workflows/createProductTagsWorkflow/index.html.md)
+
+***
+
+### product-tag.deleted
+
+Emitted when product tags are deleted.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the product tag
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [deleteProductTagsWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteProductTagsWorkflow/index.html.md)
+
+***
+
+## Product Type Events
+
+### Summary
+
+|Event|Description|
+|---|---|
+|product-type.updated|Emitted when product types are updated.|
+|product-type.created|Emitted when product types are created.|
+|product-type.deleted|Emitted when product types are deleted.|
+
+### product-type.updated
+
+Emitted when product types are updated.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the product type
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [updateProductTypesWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateProductTypesWorkflow/index.html.md)
+
+***
+
+### product-type.created
+
+Emitted when product types are created.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the product type
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [createProductTypesWorkflow](https://docs.medusajs.com/references/medusa-workflows/createProductTypesWorkflow/index.html.md)
+
+***
+
+### product-type.deleted
+
+Emitted when product types are deleted.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the product type
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [deleteProductTypesWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteProductTypesWorkflow/index.html.md)
 
 ***
 
@@ -36204,216 +36574,6 @@ The following workflows emit this event when they're executed. These workflows a
 
 ***
 
-## Product Type Events
-
-### Summary
-
-|Event|Description|
-|---|---|
-|product-type.updated|Emitted when product types are updated.|
-|product-type.created|Emitted when product types are created.|
-|product-type.deleted|Emitted when product types are deleted.|
-
-### product-type.updated
-
-Emitted when product types are updated.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the product type
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [updateProductTypesWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateProductTypesWorkflow/index.html.md)
-
-***
-
-### product-type.created
-
-Emitted when product types are created.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the product type
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [createProductTypesWorkflow](https://docs.medusajs.com/references/medusa-workflows/createProductTypesWorkflow/index.html.md)
-
-***
-
-### product-type.deleted
-
-Emitted when product types are deleted.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the product type
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [deleteProductTypesWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteProductTypesWorkflow/index.html.md)
-
-***
-
-## Product Tag Events
-
-### Summary
-
-|Event|Description|
-|---|---|
-|product-tag.updated|Emitted when product tags are updated.|
-|product-tag.created|Emitted when product tags are created.|
-|product-tag.deleted|Emitted when product tags are deleted.|
-
-### product-tag.updated
-
-Emitted when product tags are updated.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the product tag
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [updateProductTagsWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateProductTagsWorkflow/index.html.md)
-
-***
-
-### product-tag.created
-
-Emitted when product tags are created.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the product tag
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [createProductTagsWorkflow](https://docs.medusajs.com/references/medusa-workflows/createProductTagsWorkflow/index.html.md)
-
-***
-
-### product-tag.deleted
-
-Emitted when product tags are deleted.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the product tag
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [deleteProductTagsWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteProductTagsWorkflow/index.html.md)
-
-***
-
-## Product Option Events
-
-### Summary
-
-|Event|Description|
-|---|---|
-|product-option.updated|Emitted when product options are updated.|
-|product-option.created|Emitted when product options are created.|
-|product-option.deleted|Emitted when product options are deleted.|
-
-### product-option.updated
-
-Emitted when product options are updated.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the product option
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [updateProductOptionsWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateProductOptionsWorkflow/index.html.md)
-
-***
-
-### product-option.created
-
-Emitted when product options are created.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the product option
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [createProductOptionsWorkflow](https://docs.medusajs.com/references/medusa-workflows/createProductOptionsWorkflow/index.html.md)
-
-***
-
-### product-option.deleted
-
-Emitted when product options are deleted.
-
-#### Payload
-
-```ts
-[{
-  id, // The ID of the product option
-}]
-```
-
-#### Workflows Emitting this Event
-
-The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
-
-- [deleteProductOptionsWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteProductOptionsWorkflow/index.html.md)
-
-***
-
 ## Region Events
 
 ### Summary
@@ -36484,104 +36644,146 @@ The following workflows emit this event when they're executed. These workflows a
 
 ***
 
-## Fulfillment Events
+## Sales Channel Events
 
 ### Summary
 
 |Event|Description|
 |---|---|
-|shipment.created|Emitted when a shipment is created for an order.|
-|delivery.created|Emitted when a fulfillment is marked as delivered.|
+|sales-channel.created|Emitted when sales channels are created.|
+|sales-channel.updated|Emitted when sales channels are updated.|
+|sales-channel.deleted|Emitted when sales channels are deleted.|
 
-### shipment.created
+### sales-channel.created
 
-Emitted when a shipment is created for an order.
+Emitted when sales channels are created.
 
 #### Payload
 
 ```ts
-{
-  id, // the ID of the shipment
-  no_notification, // (boolean) whether to notify the customer
-}
+[{
+  id, // The ID of the sales channel
+}]
 ```
 
 #### Workflows Emitting this Event
 
 The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
 
-- [createOrderShipmentWorkflow](https://docs.medusajs.com/references/medusa-workflows/createOrderShipmentWorkflow/index.html.md)
+- [createSalesChannelsWorkflow](https://docs.medusajs.com/references/medusa-workflows/createSalesChannelsWorkflow/index.html.md)
 
 ***
 
-### delivery.created
+### sales-channel.updated
 
-Emitted when a fulfillment is marked as delivered.
+Emitted when sales channels are updated.
 
 #### Payload
 
 ```ts
-{
-  id, // the ID of the fulfillment
-}
+[{
+  id, // The ID of the sales channel
+}]
 ```
 
 #### Workflows Emitting this Event
 
 The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
 
-- [markOrderFulfillmentAsDeliveredWorkflow](https://docs.medusajs.com/references/medusa-workflows/markOrderFulfillmentAsDeliveredWorkflow/index.html.md)
+- [updateSalesChannelsWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateSalesChannelsWorkflow/index.html.md)
 
 ***
 
-## Payment Events Events
+### sales-channel.deleted
+
+Emitted when sales channels are deleted.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the sales channel
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [deleteSalesChannelsWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteSalesChannelsWorkflow/index.html.md)
+
+***
+
+## User Events
 
 ### Summary
 
 |Event|Description|
 |---|---|
-|payment.captured|Emitted when a payment is captured.|
-|payment.refunded|Emitted when a payment is refunded.|
+|user.created|Emitted when users are created.|
+|user.updated|Emitted when users are updated.|
+|user.deleted|Emitted when users are deleted.|
 
-### payment.captured
+### user.created
 
-Emitted when a payment is captured.
+Emitted when users are created.
 
 #### Payload
 
 ```ts
-{
-  id, // the ID of the payment
-}
+[{
+  id, // The ID of the user
+}]
 ```
 
 #### Workflows Emitting this Event
 
 The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
 
-- [capturePaymentWorkflow](https://docs.medusajs.com/references/medusa-workflows/capturePaymentWorkflow/index.html.md)
-- [processPaymentWorkflow](https://docs.medusajs.com/references/medusa-workflows/processPaymentWorkflow/index.html.md)
-- [markPaymentCollectionAsPaid](https://docs.medusajs.com/references/medusa-workflows/markPaymentCollectionAsPaid/index.html.md)
+- [createUsersWorkflow](https://docs.medusajs.com/references/medusa-workflows/createUsersWorkflow/index.html.md)
+- [createUserAccountWorkflow](https://docs.medusajs.com/references/medusa-workflows/createUserAccountWorkflow/index.html.md)
+- [acceptInviteWorkflow](https://docs.medusajs.com/references/medusa-workflows/acceptInviteWorkflow/index.html.md)
 
 ***
 
-### payment.refunded
+### user.updated
 
-Emitted when a payment is refunded.
+Emitted when users are updated.
 
 #### Payload
 
 ```ts
-{
-  id, // the ID of the payment
-}
+[{
+  id, // The ID of the user
+}]
 ```
 
 #### Workflows Emitting this Event
 
 The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
 
-- [refundPaymentWorkflow](https://docs.medusajs.com/references/medusa-workflows/refundPaymentWorkflow/index.html.md)
+- [updateUsersWorkflow](https://docs.medusajs.com/references/medusa-workflows/updateUsersWorkflow/index.html.md)
+
+***
+
+### user.deleted
+
+Emitted when users are deleted.
+
+#### Payload
+
+```ts
+[{
+  id, // The ID of the user
+}]
+```
+
+#### Workflows Emitting this Event
+
+The following workflows emit this event when they're executed. These workflows are executed by Medusa's API routes. You can also view the events emitted by API routes in the [Store](https://docs.medusajs.com/api/store) and [Admin](https://docs.medusajs.com/api/admin) API references.
+
+- [deleteUsersWorkflow](https://docs.medusajs.com/references/medusa-workflows/deleteUsersWorkflow/index.html.md)
+- [removeUserAccountWorkflow](https://docs.medusajs.com/references/medusa-workflows/removeUserAccountWorkflow/index.html.md)
 
 
 # build Command - Medusa CLI Reference
@@ -47121,7 +47323,7 @@ To learn more about the commerce features that Medusa provides, check out Medusa
 
 In this tutorial, you'll learn how to implement first-purchase discounts in Medusa.
 
-When you install a Medusa application, you get a fully-fledged commerce platform with a Framework for customization. The Medusa application's commerce features are built around [Commerce Modules](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/index.html.md), which are available out-of-the-box. These features include promotion and discount management features.
+When you install a Medusa application, you get a fully-fledged commerce platform with a Framework for customization. The Medusa application's commerce features are built around [Commerce Modules](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/index.html.md), which are available out-of-the-box. These features include promotion and cart management features.
 
 The first-purchase discount feature encourages customers to sign up and make their first purchase by offering them a discount. In this tutorial, you'll learn how to implement this feature in Medusa.
 
@@ -47248,8 +47450,8 @@ export const applyFirstPurchasePromoWorkflow = createWorkflow(
       entity: "cart",
       fields: ["promotions.*", "customer.*", "customer.orders.*"],
       filters: {
-        id: input.cart_id
-      }
+        id: input.cart_id,
+      },
     })
 
     const { data: promotions } = useQueryGraphStep({
@@ -47262,7 +47464,7 @@ export const applyFirstPurchasePromoWorkflow = createWorkflow(
 
     when({ 
       carts,
-      promotions
+      promotions,
     }, (data) => {
       return data.promotions.length > 0 && 
         !data.carts[0].promotions?.some((promo) => promo?.id === data.promotions[0].id) && 
@@ -47273,7 +47475,7 @@ export const applyFirstPurchasePromoWorkflow = createWorkflow(
       updateCartPromotionsStep({
         id: carts[0].id,
         promo_codes: [promotions[0].code!],
-        action: PromotionActions.ADD
+        action: PromotionActions.ADD,
       })
     })
 
@@ -47282,8 +47484,8 @@ export const applyFirstPurchasePromoWorkflow = createWorkflow(
       entity: "cart",
       fields: ["*", "promotions.*"],
       filters: {
-        id: input.cart_id
-      }
+        id: input.cart_id,
+      },
     }).config({ name: "retrieve-updated-cart" })
 
     return new WorkflowResponse(updatedCarts[0])
@@ -47332,8 +47534,8 @@ export default async function cartCreatedHandler({
   await applyFirstPurchasePromoWorkflow(container)
   .run({
     input: {
-      cart_id: data.id
-    }
+      cart_id: data.id,
+    },
   })
 }
 
@@ -47431,8 +47633,8 @@ updateCartPromotionsWorkflow.hooks.validate(
       entity: "customer",
       fields: ["orders.*", "has_account"],
       filters: {
-        id: cart.customer_id
-      }
+        id: cart.customer_id,
+      },
     })
 
     if (!customer.has_account || (customer?.orders?.length || 0) > 0) {
@@ -47472,7 +47674,7 @@ In the same `src/workflows/hooks/validate-promotion.ts` file, add the following 
 
 ```ts title="src/workflows/hooks/validate-promotion.ts"
 import { 
-  completeCartWorkflow
+  completeCartWorkflow,
 } from "@medusajs/medusa/core-flows"
 ```
 
@@ -47502,8 +47704,8 @@ completeCartWorkflow.hooks.validate(
       entity: "customer",
       fields: ["orders.*", "has_account"],
       filters: {
-        id: cart.customer_id
-      }
+        id: cart.customer_id,
+      },
     })
 
     if (!customer.has_account || (customer?.orders?.length || 0) > 0) {
@@ -47694,6 +47896,635 @@ If you don't see the pop-up, make sure that you're logged out.
 ## Next Steps
 
 You've now implemented the first-purchase discount feature in Medusa. You can add more features to build customer loyalty, such as a [loyalty points system](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/how-to-tutorials/tutorials/loyalty-points/index.html.md) or [product reviews](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/how-to-tutorials/tutorials/product-reviews/index.html.md).
+
+If you're new to Medusa, check out the [main documentation](https://docs.medusajs.com/docs/learn/index.html.md), where you'll get a more in-depth understanding of all the concepts you've used in this guide and more.
+
+To learn more about the commerce features that Medusa provides, check out Medusa's [Commerce Modules](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/index.html.md).
+
+### Troubleshooting
+
+If you encounter issues during your development, check out the [troubleshooting guides](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/troubleshooting/index.html.md).
+
+### Getting Help
+
+If you encounter issues not covered in the troubleshooting guides:
+
+1. Visit the [Medusa GitHub repository](https://github.com/medusajs/medusa) to report issues or ask questions.
+2. Join the [Medusa Discord community](https://discord.gg/medusajs) for real-time support from community members.
+
+
+# Add Gift Message to Line Items in Medusa
+
+In this tutorial, you will learn how to add a gift message to items in carts and orders in Medusa.
+
+When you install a Medusa application, you get a fully-fledged commerce platform with a Framework for customization. The Medusa application's commerce features are built around [Commerce Modules](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/commerce-modules/index.html.md), which are available out-of-the-box. These features include cart and order management capabilities.
+
+You can customize the Medusa application and storefront to add a gift message to items in the cart. This feature allows customers to add a personalized message to their gifts, enhancing the shopping experience.
+
+## Summary
+
+By following this tutorial, you will learn how to:
+
+- Install and set up Medusa and the Next.js Starter Storefront.
+- Customize the storefront to support gift messages on cart items during checkout.
+- Customize the Medusa Admin to show gift items with messages in an order.
+
+You can follow this tutorial whether you're new to Medusa or an advanced Medusa developer.
+
+[View on Github](https://github.com/medusajs/examples/tree/main/order-gift-message): Find the full code for this tutorial.
+
+***
+
+## Step 1: Install a Medusa Application
+
+### Prerequisites
+
+- [Node.js v20+](https://nodejs.org/en/download)
+- [Git CLI tool](https://git-scm.com/downloads)
+- [PostgreSQL](https://www.postgresql.org/download/)
+
+Start by installing the Medusa application on your machine with the following command:
+
+```bash
+npx create-medusa-app@latest
+```
+
+First, you'll be asked for the project's name. Then, when prompted about installing the [Next.js Starter Storefront](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/nextjs-starter/index.html.md), choose "Yes."
+
+Afterward, the installation process will start, which will install the Medusa application in a directory with your project's name and the Next.js Starter Storefront in a separate directory named `{project-name}-storefront`.
+
+The Medusa application is composed of a headless Node.js server and an admin dashboard. The storefront is installed or custom-built separately and connects to the Medusa application through its REST endpoints, called [API routes](https://docs.medusajs.com/docs/learn/fundamentals/api-routes/index.html.md). Learn more in [Medusa's Architecture documentation](https://docs.medusajs.com/docs/learn/introduction/architecture/index.html.md).
+
+Once the installation finishes successfully, the Medusa Admin dashboard will open with a form to create a new user. Enter the user's credentials and submit the form. Afterward, you can log in with the new user and explore the dashboard.
+
+Check out the [troubleshooting guides](https://docs.medusajs.com/Users/shahednasser/medusa/www/apps/resources/app/troubleshooting/create-medusa-app-errors/index.html.md) for help.
+
+***
+
+## Step 2: Add Gift Inputs to Cart Item
+
+In this step, you'll customize the Next.js Starter Storefront to allow customers to specify that an item is a gift and add a gift message to it.
+
+You'll store the gift option and message in the cart item's `metadata` property, which is a key-value `jsonb` object that can hold any additional information about the item. When the customer places the order, the `metadata` is copied to the `metadata` of the order's line items.
+
+So, you only need to customize the storefront to add the gift message input and update the cart item metadata.
+
+### a. Changes to Update Item Function
+
+The Next.js Starter Storefront has an `updateLineItem` function that sends a request to the Medusa server to update the cart item. However, it doesn't support updating the `metadata` property.
+
+So, in `src/lib/data/cart.ts`, find the `updateLineItem` function and add a `metadata` property to its object parameter:
+
+```ts title="src/lib/data/cart.ts" badgeLabel="Storefront" badgeColor="blue" highlights={[["4"], ["8"]]}
+export async function updateLineItem({
+  lineId,
+  quantity,
+  metadata,
+}: {
+  lineId: string
+  quantity: number
+  metadata?: Record<string, any>
+}) {
+  // ...
+}
+```
+
+Next, change the usage of `await sdk.store.cart.updateLineItem` in the function to pass the `metadata` property:
+
+```ts title="src/lib/data/cart.ts" badgeLabel="Storefront" badgeColor="blue"
+const updateData: any = { quantity }
+if (metadata) {
+  updateData.metadata = metadata
+}
+
+await sdk.store.cart
+  .updateLineItem(cartId, lineId, updateData, {}, headers)
+// ...
+```
+
+You pass the `metadata` property to the Medusa server, which will update the cart item with the new metadata.
+
+### b. Add Gift Inputs
+
+Next, you'll modify the cart item component that's shown in the cart and checkout pages to show two inputs: one to specify that the item is a gift and another to add a gift message.
+
+In `src/modules/cart/components/item/index.tsx`, add the following imports at the top of the file:
+
+```tsx title="src/modules/cart/components/item/index.tsx" badgeLabel="Storefront" badgeColor="blue"
+import { Checkbox, Textarea, Button, Label } from "@medusajs/ui"
+```
+
+You import components from the [Medusa UI library](https://docs.medusajs.com/ui/index.html.md) that will be useful for the gift inputs.
+
+Next, in the `Item` component, add the following variables before the `changeQuantity` function:
+
+```tsx title="src/modules/cart/components/item/index.tsx" badgeLabel="Storefront" badgeColor="blue" highlights={giftVarsHighlights}
+const [giftUpdating, setGiftUpdating] = useState(false)
+const [newGiftMessage, setNewGiftMessage] = useState(
+  item.metadata?.gift_message as string || ""
+)
+const [isEditingGiftMessage, setIsEditingGiftMessage] = useState(false)
+
+const isGift = item.metadata?.is_gift === "true"
+const giftMessage = item.metadata?.gift_message as string
+```
+
+You define the following variables:
+
+- `giftUpdating`: A state variable to track whether the gift message is being updated. This will be useful to handle loading and disabled states.
+- `newGiftMessage`: A state variable to hold the new gift message input value.
+- `isEditingGiftMessage`: A state variable to track whether the gift message input is being edited. This will be useful to show or hide the input field.
+- `isGift`: A boolean indicating whether the item is a gift based on the `metadata.is_gift` property.
+- `giftMessage`: The current gift message from the item's `metadata.gift_message` property.
+
+Next, add the following functions before the `return` statement to handle updates to the gift inputs:
+
+```tsx title="src/modules/cart/components/item/index.tsx" badgeLabel="Storefront" badgeColor="blue" highlights={giftFunctionsHighlights}
+const handleGiftToggle = async (checked: boolean) => {
+  setGiftUpdating(true)
+  
+  try {
+    const newMetadata = {
+      is_gift: checked.toString(),
+      gift_message: checked ? newGiftMessage : "",
+    }
+    
+    await updateLineItem({
+      lineId: item.id,
+      quantity: item.quantity,
+      metadata: newMetadata,
+    })
+  } catch (error) {
+    console.error("Error updating gift status:", error)
+  } finally {
+    setGiftUpdating(false)
+  }
+}
+
+const handleSaveGiftMessage = async () => {
+  setGiftUpdating(true)
+  
+  try {
+    const newMetadata = {
+      is_gift: "true",
+      gift_message: newGiftMessage,
+    }
+    
+    await updateLineItem({
+      lineId: item.id,
+      quantity: item.quantity,
+      metadata: newMetadata,
+    })
+    setIsEditingGiftMessage(false)
+  } catch (error) {
+    console.error("Error updating gift message:", error)
+  } finally {
+    setGiftUpdating(false)
+  }
+}
+
+const handleStartEdit = () => {
+  setIsEditingGiftMessage(true)
+}
+
+const handleCancelEdit = () => {
+  setNewGiftMessage(giftMessage || "")
+  setIsEditingGiftMessage(false)
+}
+```
+
+You define the following functions:
+
+- `handleGiftToggle`: Used when the gift checkbox is toggled. It updates the cart item's metadata to set the `is_gift` and `gift_message` properties based on the checkbox state.
+- `handleSaveGiftMessage`: Used to save the gift message when the customer clicks the "Save" button. It updates the cart item's metadata with the new gift message.
+- `handleStartEdit`: Used to start editing the gift message input by setting the `isEditingGiftMessage` state to `true`.
+- `handleCancelEdit`: Used to cancel the gift message editing and reset the input value to the current gift message.
+
+Finally, you'll change the `return` statement to include the gift inputs. Replace the existing return statement with the following:
+
+```tsx title="src/modules/cart/components/item/index.tsx" badgeLabel="Storefront" badgeColor="blue"
+return (
+  <div className="bg-white border border-gray-200 rounded-lg p-4">
+    <div className="flex gap-4">
+      {/* Product Image */}
+      <div className="flex-shrink-0">
+        <LocalizedClientLink
+          href={`/products/${item.product_handle}`}
+          className={clx("flex", {
+            "w-16": type === "preview",
+            "w-20": type === "full",
+          })}
+        >
+          <Thumbnail
+            thumbnail={item.thumbnail}
+            images={item.variant?.product?.images}
+            size="square"
+          />
+        </LocalizedClientLink>
+      </div>
+
+      {/* Product Details */}
+      <div className="flex-1 min-w-0">
+        <div className="flex justify-between items-start mb-2">
+          <div className="flex-1 min-w-0">
+            <Text
+              className="txt-medium-plus text-ui-fg-base truncate"
+              data-testid="product-title"
+            >
+              {item.product_title}
+            </Text>
+            <LineItemOptions variant={item.variant} data-testid="product-variant" />
+          </div>
+        </div>
+
+        {/* Gift Options */}
+        <div className="mb-3">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full border hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Checkbox
+              checked={isGift}
+              onCheckedChange={handleGiftToggle}
+              disabled={giftUpdating}
+              className="w-4 h-4"
+              id="is-gift"
+            />
+            <Label htmlFor="is-gift">
+              This is a gift
+            </Label>
+          </div>
+          
+          {isGift && (
+            <div className="mt-3">
+              {isEditingGiftMessage ? (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Text className="text-sm font-medium text-ui-fg-base">
+                      Gift Message:
+                    </Text>
+                    <Text className="text-xs text-ui-fg-subtle">(optional)</Text>
+                  </div>
+                  <Textarea
+                    placeholder="Add a personal message..."
+                    value={newGiftMessage}
+                    onChange={(e) => setNewGiftMessage(e.target.value)}
+                    disabled={giftUpdating}
+                    className="w-full"
+                    rows={2}
+                  />
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      size="small"
+                      variant="secondary"
+                      onClick={handleCancelEdit}
+                      disabled={giftUpdating}
+                      className="text-xs px-3 py-1"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="primary"
+                      onClick={handleSaveGiftMessage}
+                      disabled={giftUpdating || newGiftMessage === giftMessage}
+                      className="text-xs px-3 py-1"
+                    >
+                      {giftUpdating ? <Spinner /> : "Save"}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Text className="text-sm font-medium text-ui-fg-base">
+                      Gift Message:
+                    </Text>
+                    {giftMessage ? (
+                      <Text className="text-sm text-ui-fg-subtle">
+                        {giftMessage}
+                      </Text>
+                    ) : (
+                      <Text className="text-sm text-ui-fg-subtle italic">
+                        No message added
+                      </Text>
+                    )}
+                  </div>
+                  <Button
+                    size="small"
+                    variant="secondary"
+                    onClick={handleStartEdit}
+                    className="text-xs px-2 py-1"
+                  >
+                    {giftMessage ? "Edit" : "Add"}
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Quantity and Actions */}
+        {type === "full" && (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <DeleteButton id={item.id} data-testid="product-delete-button" />
+              <CartItemSelect
+                value={item.quantity}
+                onChange={(value) => changeQuantity(parseInt(value.target.value))}
+                className="w-16 h-8 p-2"
+                data-testid="product-select-button"
+              >
+                {/* TODO: Update this with the v2 way of managing inventory */}
+                {Array.from(
+                  {
+                    length: Math.min(maxQuantity, 10),
+                  },
+                  (_, i) => (
+                    <option value={i + 1} key={i}>
+                      {i + 1}
+                    </option>
+                  )
+                )}
+              </CartItemSelect>
+              {updating && <Spinner />}
+            </div>
+          </div>
+        )}
+
+        {/* Preview Mode */}
+        {type === "preview" && (
+          <div className="flex items-center justify-between">
+            <Text className="text-sm text-ui-fg-subtle">
+              Qty: {item.quantity}
+            </Text>
+            <LineItemUnitPrice
+              item={item}
+              style="tight"
+              currencyCode={currencyCode}
+            />
+          </div>
+        )}
+
+        <ErrorMessage error={error} data-testid="product-error-message" />
+      </div>
+    </div>
+  </div>
+)
+```
+
+You replace the previous table row design with a card. In the card, you show the item's image, title, variant options, quantity, and price.
+
+You also show a checkbox to toggle the gift status of the item. If the item is a gift, you show a text area to add or edit the gift message. You only show the gift message input if the user clicks an "Add" or "Edit" button.
+
+The gift message input has a "Save" button to save the message and a "Cancel" button to cancel the editing.
+
+### c. Update Cart and Checkout Templates
+
+The items are previously shown on the cart and checkout pages in a table. However, since you've changed the item component to a card, you'll need to update the cart and checkout templates to replace the table with a list of items.
+
+In `src/modules/cart/templates/items.tsx`, which shows the items on the cart page, change the `return` statement to the following:
+
+```tsx title="src/modules/cart/templates/items.tsx" badgeLabel="Storefront" badgeColor="blue"
+return (
+  <div>
+    <div className="pb-3 flex items-center">
+      <Heading className="text-[2rem] leading-[2.75rem]">Cart</Heading>
+    </div>
+    <div className="space-y-4">
+      {items
+        ? items
+            .sort((a, b) => {
+              return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
+            })
+            .map((item) => {
+              return (
+                <Item
+                  key={item.id}
+                  item={item}
+                  currencyCode={cart?.currency_code}
+                />
+              )
+            })
+        : repeat(5).map((i) => {
+            return <SkeletonLineItem key={i} />
+          })}
+    </div>
+  </div>
+)
+```
+
+You replace the table that was wrapping the items with a `div` that contains a list of `Item` components.
+
+Next, in `src/modules/cart/templates/preview.tsx` that shows the items in the checkout summary, change the `return` statement to the following:
+
+```tsx title="src/modules/cart/templates/preview.tsx" badgeLabel="Storefront" badgeColor="blue"
+return (
+  <div
+    className={clx("space-y-3 mt-4", {
+      "pl-[1px] overflow-y-scroll overflow-x-hidden no-scrollbar max-h-[420px]":
+        hasOverflow,
+    })}
+  >
+    {items
+      ? items
+          .sort((a, b) => {
+            return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
+          })
+          .map((item) => {
+            return (
+              <Item
+                key={item.id}
+                item={item}
+                type="preview"
+                currencyCode={cart.currency_code}
+              />
+            )
+          })
+      : repeat(5).map((i) => {
+          return <SkeletonLineItem key={i} />
+        })}
+  </div>
+)
+```
+
+Similarly, you replace the table that was wrapping the items with a `div` that contains a list of `Item` components.
+
+### Test the Changes
+
+You can now test the gift inputs during checkout.
+
+First, start the Medusa application by running the following command in the Medusa application directory:
+
+```bash npm2yarn badgeLabel="Medusa Application" badgeColor="green"
+npm run dev
+```
+
+Then, start the Next.js Starter Storefront by running the following command in the storefront directory:
+
+```bash npm2yarn badgeLabel="Storefront" badgeColor="blue"
+npm run dev
+```
+
+Open the storefront in your browser at `http://localhost:8000`. Add a product to the cart, and proceed to the checkout page. You'll find a checkbox to mark the item as a gift for each item.
+
+![Gift checkbox on checkout page](https://res.cloudinary.com/dza7lstvk/image/upload/v1750923117/Medusa%20Resources/CleanShot_2025-06-26_at_10.31.25_2x_wcqiff.png)
+
+If you check the box, you can also add and edit the gift message. The gift message will be saved in the cart item's `metadata`.
+
+![Gift item with message added](https://res.cloudinary.com/dza7lstvk/image/upload/v1750924150/Medusa%20Resources/CleanShot_2025-06-26_at_10.32.52_2x_qir2t5.png)
+
+***
+
+## Step 3: Show Gift Options in Order Confirmation Page
+
+Next, you'll customize the storefront to show the gift message of items in the order confirmation page.
+
+In `src/modules/order/components/item/index.tsx`, add in the `Item` component the following variables:
+
+```tsx title="src/modules/order/components/item/index.tsx" badgeLabel="Storefront" badgeColor="blue"
+const isGift = item.metadata?.is_gift === "true"
+const giftMessage = item.metadata?.gift_message as string
+```
+
+You define the following variables:
+
+- `isGift`: A boolean indicating whether the item is a gift based on the `metadata.is_gift` property.
+- `giftMessage`: The item's gift message from the `metadata.gift_message` property.
+
+Next, in the `return` statement, add the following below the `LineItemOptions` component:
+
+```tsx title="src/modules/order/components/item/index.tsx" badgeLabel="Storefront" badgeColor="blue"
+{isGift && <Text
+  className="inline-block txt-medium text-ui-fg-subtle w-full overflow-hidden text-ellipsis"
+>
+  Gift Message: {giftMessage || "No gift message provided"}
+</Text>}
+```
+
+If the item is a gift, you show the gift message below the variant options. If no gift message is provided, you show "No gift message provided."
+
+### Test the Changes
+
+To test this change, place an order with a gift item. On the order confirmation page, you should see the gift message displayed below the variant options.
+
+![Gift message on order confirmation page](https://res.cloudinary.com/dza7lstvk/image/upload/v1750924429/Medusa%20Resources/CleanShot_2025-06-26_at_10.53.32_2x_htzvtw.png)
+
+***
+
+## Step 4: Show Gift Options in Admin Dashboard
+
+In this step, you'll customize the Medusa Admin dashboard to show the gift items with their messages in an order.
+
+### What is a Widget?
+
+The Medusa Admin dashboard's pages are customizable to insert [widgets](https://docs.medusajs.com/docs/learn/fundamentals/admin/widgets/index.html.md) of custom content in predefined injection zones. You create these widgets as React components that allow admin users to perform custom actions.
+
+So, to show the gift items with their messages in an order, you'll create a custom widget that shows the gift items in the order details page.
+
+### Create the Widget
+
+You create a widget in a `.tsx` file under the `src/admin/widgets` directory. So, in the Medusa application directory, create the file `src/admin/widgets/order-gift-items-widget.tsx` with the following content:
+
+```tsx title="src/admin/widgets/order-gift-items-widget.tsx" badgeLabel="Medusa Application" badgeColor="green"
+import { defineWidgetConfig } from "@medusajs/admin-sdk"
+import { Container, Text } from "@medusajs/ui"
+import { DetailWidgetProps, AdminOrder } from "@medusajs/framework/types"
+
+const OrderGiftItemsWidget = ({ data }: DetailWidgetProps<AdminOrder>) => {
+  const giftItems = data.items?.filter(
+    (item: any) => item.metadata?.is_gift === "true"
+  )
+
+  if (!giftItems?.length) {
+    return null
+  }
+
+  return (
+    <Container className="mb-4">
+      <Text className="font-medium h2-core mb-2">Gift Items & Messages</Text>
+      <div className="flex flex-col gap-4">
+        {giftItems.map((item: any) => (
+          <div key={item.id} className="border-b last:border-b-0 pb-2">
+            <Text className="font-medium">{item.title} (x{item.quantity})</Text>
+            <Text className="text-sm text-gray-600">
+              Gift Message: {item.metadata?.gift_message || "(No message)"}
+            </Text>
+          </div>
+        ))}
+      </div>
+    </Container>
+  )
+}
+
+export const config = defineWidgetConfig({
+  zone: "order.details.side.after",
+})
+
+export default OrderGiftItemsWidget 
+```
+
+A widget file must export:
+
+- A React component that renders the widget content.
+- A configuration object created with `defineWidgetConfig` that defines the widget's [injection zone](https://docs.medusajs.com/admin-widget-injection-zones/index.html.md).
+
+You define the `OrderGiftItemsWidget` component that is injected in the `order.details.side.after` zone. Because it's injected in the order details page, it receives the order details as a `data` prop.
+
+In the component, you filter the order items to get only the gift items by checking if the `metadata.is_gift` property is set to `"true"`. Then, you render the gift items with their messages in a new "Gift Items & Messages" section.
+
+### Test Medusa Admin Changes
+
+To test out the Medusa Admin widget, start the Medusa application by running the following command in the Medusa application directory:
+
+```bash npm2yarn badgeLabel="Medusa Application" badgeColor="green"
+npm run dev
+```
+
+Then, open the Medusa Admin at `http://localhost:9000/app` and log in with the user you created earlier.
+
+Go to the Orders page and click on an order that has gift items. You'll find a new section called "Gift Items & Messages" that shows the gift items with their messages.
+
+![Order details page in the Medusa Admin with the "Gift Items & Messages" section highlighted](https://res.cloudinary.com/dza7lstvk/image/upload/v1750925501/Medusa%20Resources/CleanShot_2025-06-26_at_11.11.18_2x_jrrc2s.png)
+
+***
+
+## Optional: Handle Gift Items in Fulfillment Provider
+
+If you have a custom fulfillment provider and you want to handle gift items in it, you can do so in the `createFulfillment` method of the [Fulfillment Module Provider's service](https://docs.medusajs.com/references/fulfillment/provider/index.html.md).
+
+For example:
+
+```ts title="Fulfillment Module Provider's Service" badgeLabel="Medusa Application" badgeColor="green" highlights={createFulfillmentHighlights}
+class ManualFulfillmentService extends utils_1.AbstractFulfillmentProviderService {
+  // ...
+  async createFulfillment(
+    data: Record<string, unknown>,
+    items: Partial<Omit<FulfillmentItemDTO, "fulfillment">>[],
+    order: Partial<FulfillmentOrderDTO> | undefined,
+    fulfillment: Partial<Omit<FulfillmentDTO, "provider_id" | "data" | "items">>
+  ): Promise<CreateFulfillmentResult> {
+    const itemsWithGiftMessage = order.items?.filter((lineItem) => {
+      const isInFulfillment = items.find(
+        (item) => item.line_item_id === lineItem.id
+      )
+      if (!isInFulfillment) {
+        return false
+      }
+      return lineItem.metadata?.is_gift === "true"
+    })
+
+    // TODO pass gift items to third-party provider
+  }
+}
+```
+
+You filter the order items to find the items that are part of the fulfillment and are gift items. You can then process or pass them differently to your third-party provider.
+
+***
+
+## Next Steps
+
+You've now added gift messages to items in carts and orders in Medusa.
 
 If you're new to Medusa, check out the [main documentation](https://docs.medusajs.com/docs/learn/index.html.md), where you'll get a more in-depth understanding of all the concepts you've used in this guide and more.
 

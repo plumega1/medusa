@@ -1,5 +1,14 @@
 # @medusajs/ui
 
+## 4.0.16
+
+### Patch Changes
+
+- [#12855](https://github.com/medusajs/medusa/pull/12855) [`4b224d5effda952d7d87b96dd30407178edf4115`](https://github.com/medusajs/medusa/commit/4b224d5effda952d7d87b96dd30407178edf4115) Thanks [@peterlgh7](https://github.com/peterlgh7)! - fix: fix onScroll in Select.Content
+
+- Updated dependencies []:
+  - @medusajs/icons@2.8.6
+
 ## 4.0.15
 
 ### Patch Changes

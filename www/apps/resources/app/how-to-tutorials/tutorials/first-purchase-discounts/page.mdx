@@ -27,7 +27,7 @@ export const metadata = {
 
 In this tutorial, you'll learn how to implement first-purchase discounts in Medusa.
 
-When you install a Medusa application, you get a fully-fledged commerce platform with a Framework for customization. The Medusa application's commerce features are built around [Commerce Modules](../../../commerce-modules/page.mdx), which are available out-of-the-box. These features include promotion and discount management features.
+When you install a Medusa application, you get a fully-fledged commerce platform with a Framework for customization. The Medusa application's commerce features are built around [Commerce Modules](../../../commerce-modules/page.mdx), which are available out-of-the-box. These features include promotion and cart management features.
 
 The first-purchase discount feature encourages customers to sign up and make their first purchase by offering them a discount. In this tutorial, you'll learn how to implement this feature in Medusa.
 
@@ -227,8 +227,8 @@ export const applyFirstPurchasePromoWorkflow = createWorkflow(
       entity: "cart",
       fields: ["promotions.*", "customer.*", "customer.orders.*"],
       filters: {
-        id: input.cart_id
-      }
+        id: input.cart_id,
+      },
     })
 
     const { data: promotions } = useQueryGraphStep({
@@ -241,7 +241,7 @@ export const applyFirstPurchasePromoWorkflow = createWorkflow(
 
     when({ 
       carts,
-      promotions
+      promotions,
     }, (data) => {
       return data.promotions.length > 0 && 
         !data.carts[0].promotions?.some((promo) => promo?.id === data.promotions[0].id) && 
@@ -252,7 +252,7 @@ export const applyFirstPurchasePromoWorkflow = createWorkflow(
       updateCartPromotionsStep({
         id: carts[0].id,
         promo_codes: [promotions[0].code!],
-        action: PromotionActions.ADD
+        action: PromotionActions.ADD,
       })
     })
 
@@ -261,8 +261,8 @@ export const applyFirstPurchasePromoWorkflow = createWorkflow(
       entity: "cart",
       fields: ["*", "promotions.*"],
       filters: {
-        id: input.cart_id
-      }
+        id: input.cart_id,
+      },
     }).config({ name: "retrieve-updated-cart" })
 
     return new WorkflowResponse(updatedCarts[0])
@@ -319,8 +319,8 @@ export default async function cartCreatedHandler({
   await applyFirstPurchasePromoWorkflow(container)
   .run({
     input: {
-      cart_id: data.id
-    }
+      cart_id: data.id,
+    },
   })
 }
 
@@ -429,8 +429,8 @@ updateCartPromotionsWorkflow.hooks.validate(
       entity: "customer",
       fields: ["orders.*", "has_account"],
       filters: {
-        id: cart.customer_id
-      }
+        id: cart.customer_id,
+      },
     })
 
     if (!customer.has_account || (customer?.orders?.length || 0) > 0) {
@@ -474,7 +474,7 @@ In the same `src/workflows/hooks/validate-promotion.ts` file, add the following 
 
 ```ts title="src/workflows/hooks/validate-promotion.ts"
 import { 
-  completeCartWorkflow
+  completeCartWorkflow,
 } from "@medusajs/medusa/core-flows"
 ```
 
@@ -511,8 +511,8 @@ completeCartWorkflow.hooks.validate(
       entity: "customer",
       fields: ["orders.*", "has_account"],
       filters: {
-        id: cart.customer_id
-      }
+        id: cart.customer_id,
+      },
     })
 
     if (!customer.has_account || (customer?.orders?.length || 0) > 0) {

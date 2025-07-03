@@ -1153,7 +1153,7 @@ moduleIntegrationTestRunner<IWorkflowEngineService>({
 
           const notExpiredWorkflowId = "not-expired-workflow-" + ulid()
           createWorkflow(
-            { name: notExpiredWorkflowId, retentionTime: 1000 },
+            { name: notExpiredWorkflowId, retentionTime: 10000 },
             () => {
               return new WorkflowResponse("not expired")
             }

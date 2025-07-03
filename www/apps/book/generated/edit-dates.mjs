@@ -2,7 +2,7 @@ export const generatedEditDates = {
   "app/learn/fundamentals/scheduled-jobs/page.mdx": "2024-12-09T10:51:40.570Z",
   "app/learn/fundamentals/workflows/page.mdx": "2024-12-09T14:45:17.837Z",
   "app/learn/deployment/page.mdx": "2025-06-20T08:36:29.097Z",
-  "app/learn/page.mdx": "2025-05-01T15:30:08.238Z",
+  "app/learn/page.mdx": "2025-06-27T11:39:15.941Z",
   "app/learn/fundamentals/modules/commerce-modules/page.mdx": "2025-04-17T08:51:32.723Z",
   "app/learn/fundamentals/workflows/retry-failed-steps/page.mdx": "2025-03-28T07:15:19.388Z",
   "app/learn/fundamentals/workflows/workflow-hooks/page.mdx": "2024-12-09T10:44:33.781Z",
@@ -122,5 +122,6 @@ export const generatedEditDates = {
   "app/learn/fundamentals/workflows/errors/page.mdx": "2025-04-25T14:26:25.000Z",
   "app/learn/fundamentals/api-routes/override/page.mdx": "2025-05-09T08:01:24.493Z",
   "app/learn/fundamentals/module-links/index/page.mdx": "2025-05-23T07:57:58.958Z",
-  "app/learn/fundamentals/module-links/index-module/page.mdx": "2025-06-19T16:02:05.665Z"
+  "app/learn/fundamentals/module-links/index-module/page.mdx": "2025-06-19T16:02:05.665Z",
+  "app/learn/introduction/build-with-llms-ai/page.mdx": "2025-06-27T12:07:08.147Z"
 }

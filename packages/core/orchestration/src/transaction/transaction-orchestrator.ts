@@ -841,6 +841,7 @@ export class TransactionOrchestrator extends EventEmitter {
       const execution: Promise<void | unknown>[] = []
 
       let i = 0
+      let hasAsyncSteps = false
       for (const step of nextSteps.next) {
         const stepIndex = i++
         if (!stepsShouldContinueExecution[stepIndex]) {
@@ -876,12 +877,13 @@ export class TransactionOrchestrator extends EventEmitter {
         } else {
           // Execute async step in background and continue the execution of the transaction
           this.executeAsyncStep(promise, transaction, step, nextSteps)
+          hasAsyncSteps = true
         }
       }
 
       await promiseAll(execution)
 
-      if (nextSteps.next.length === 0) {
+      if (nextSteps.next.length === 0 || (hasAsyncSteps && !execution.length)) {
         continueExecution = false
       }
     }
@@ -1287,6 +1289,16 @@ export class TransactionOrchestrator extends EventEmitter {
       throw new MedusaError(
         MedusaError.Types.NOT_ALLOWED,
         `Cannot revert a permanent failed transaction.`
+      )
+    }
+
+    if (
+      flow.state === TransactionState.COMPENSATING ||
+      flow.state === TransactionState.WAITING_TO_COMPENSATE
+    ) {
+      throw new MedusaError(
+        MedusaError.Types.NOT_ALLOWED,
+        `Cannot revert a transaction that is already compensating.`
       )
     }
 

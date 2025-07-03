@@ -18,6 +18,7 @@ import {
   startApp,
   syncLinks,
 } from "./medusa-test-runner-utils"
+import { waitWorkflowExecutions } from "./medusa-test-runner-utils/wait-workflow-executions"
 
 export interface MedusaSuiteOptions {
   dbConnection: any // knex instance
@@ -34,6 +35,9 @@ export interface MedusaSuiteOptions {
     clientUrl: string
   }
   getMedusaApp: () => MedusaAppOutput
+  utils: {
+    waitWorkflowExecutions: (container: MedusaContainer) => Promise<void>
+  }
 }
 
 interface TestRunnerConfig {
@@ -268,6 +272,7 @@ class MedusaTestRunner {
 
   public async afterEach(): Promise<void> {
     try {
+      await waitWorkflowExecutions(this.globalContainer as MedusaContainer)
       await this.dbUtils.teardown({ schema: this.schema })
     } catch (error) {
       logger.error("Error tearing down database:", error?.message)
@@ -287,6 +292,10 @@ class MedusaTestRunner {
         clientUrl: this.dbConfig.clientUrl,
       },
       dbUtils: this.dbUtils,
+      utils: {
+        waitWorkflowExecutions: () =>
+          waitWorkflowExecutions(this.globalContainer as MedusaContainer),
+      },
     }
   }
 }

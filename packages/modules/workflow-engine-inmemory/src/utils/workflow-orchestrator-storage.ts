@@ -157,6 +157,7 @@ export class InMemoryDistributedTransactionStorage
         .catch(() => undefined)
 
     if (trx) {
+      const { flow, errors } = this.storage.get(key) ?? {}
       const { idempotent } = options ?? {}
       const execution = trx.execution as TransactionFlow
 
@@ -183,9 +184,9 @@ export class InMemoryDistributedTransactionStorage
       }
 
       return {
-        flow: trx.execution as TransactionFlow,
+        flow: flow ?? (trx.execution as TransactionFlow),
         context: trx.context?.data as TransactionContext,
-        errors: trx.context?.errors as TransactionStepError[],
+        errors: errors ?? (trx.context?.errors as TransactionStepError[]),
       }
     }
 

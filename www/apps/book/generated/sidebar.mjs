@@ -38,6 +38,16 @@ export const generatedSidebars = [
             "children": [],
             "chapterTitle": "1.3. Architecture",
             "number": "1.3."
+          },
+          {
+            "loaded": true,
+            "isPathHref": true,
+            "type": "link",
+            "title": "AI Assistants and LLMs",
+            "path": "/learn/introduction/build-with-llms-ai",
+            "children": [],
+            "chapterTitle": "1.4. AI Assistants and LLMs",
+            "number": "1.4."
           }
         ],
         "chapterTitle": "1. Getting Started",
