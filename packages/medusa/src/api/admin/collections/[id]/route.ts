@@ -16,8 +16,10 @@ export const GET = async (
   req: AuthenticatedMedusaRequest,
   res: MedusaResponse<HttpTypes.AdminCollectionResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const collection = await refetchCollection(
     req.params.id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )
@@ -29,7 +31,8 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<AdminUpdateCollectionType & AdditionalData>,
   res: MedusaResponse<HttpTypes.AdminCollectionResponse>
 ) => {
-  const existingCollection = await refetchCollection(req.params.id, req.scope, [
+  const store_id = req.auth_context.store_id
+  const existingCollection = await refetchCollection(req.params.id, store_id, req.scope, [
     "id",
   ])
   if (!existingCollection) {
@@ -51,6 +54,7 @@ export const POST = async (
 
   const collection = await refetchCollection(
     req.params.id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )

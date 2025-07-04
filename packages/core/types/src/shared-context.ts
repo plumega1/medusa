@@ -83,4 +83,6 @@ export type Context<TManager = unknown> = {
    * A boolean value indicating whether the current workflow execution is being cancelled.
    */
   isCancelling?: boolean
+
+  store_id?: string
 }

@@ -50,11 +50,11 @@ export default class StoreModuleService
   }
 
   // Multi-tenancy helper method to get stores by user
-  async retrieveStoresByUserId(
+  retrieveStoresByUserId = async (
     userId: string,
     config?: { relations?: string[] },
     sharedContext?: Context
-  ): Promise<StoreTypes.StoreDTO[]> {
+  ): Promise<StoreTypes.StoreDTO[]> => {
     return await this.listStores(
       { user_id: userId },
       { relations: config?.relations || ["supported_currencies"] },

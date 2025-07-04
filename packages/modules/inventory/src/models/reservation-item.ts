@@ -4,6 +4,7 @@ import InventoryItem from "./inventory-item"
 const ReservationItem = model
   .define("ReservationItem", {
     id: model.id({ prefix: "resitem" }).primaryKey(),
+    store_id: model.text().searchable(),
     line_item_id: model.text().nullable(),
     allow_backorder: model.boolean().default(false),
     location_id: model.text(),

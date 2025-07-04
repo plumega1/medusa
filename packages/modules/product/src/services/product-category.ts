@@ -21,14 +21,14 @@ import { UpdateCategoryInput } from "@types"
 type InjectedDependencies = {
   productCategoryRepository: DAL.TreeRepositoryService
 }
+
 export default class ProductCategoryService {
-  protected readonly productCategoryRepository_: DAL.TreeRepositoryService
+  protected readonly productCategoryRepository_: ProductCategoryRepository
 
   constructor({ productCategoryRepository }: InjectedDependencies) {
-    this.productCategoryRepository_ = productCategoryRepository
+    this.productCategoryRepository_ = productCategoryRepository as ProductCategoryRepository
   }
 
-  // TODO: Add support for object filter
   @InjectManager("productCategoryRepository_")
   async retrieve(
     productCategoryId: string,
@@ -49,8 +49,6 @@ export default class ProductCategoryService {
       config
     )
 
-    // TODO: Currently remoteQuery doesn't allow passing custom objects, so the `include*` are part of the filters
-    // Modify remoteQuery to allow passing custom objects
     const transformOptions = {
       includeDescendantsTree: true,
     }
@@ -81,10 +79,10 @@ export default class ProductCategoryService {
       includeDescendantsTree: filters?.include_descendants_tree || false,
       includeAncestorsTree: filters?.include_ancestors_tree || false,
     }
+
     delete filters.include_descendants_tree
     delete filters.include_ancestors_tree
 
-    // Apply free text search filter
     if (isDefined(filters?.q)) {
       config.filters ??= {}
       config.filters[FreeTextSearchFilterKeyPrefix + ProductCategory.name] = {
@@ -115,10 +113,10 @@ export default class ProductCategoryService {
       includeDescendantsTree: filters?.include_descendants_tree || false,
       includeAncestorsTree: filters?.include_ancestors_tree || false,
     }
+
     delete filters.include_descendants_tree
     delete filters.include_ancestors_tree
 
-    // Apply free text search filter
     if (isDefined(filters?.q)) {
       config.filters ??= {}
       config.filters[FreeTextSearchFilterKeyPrefix + ProductCategory.name] = {
@@ -144,9 +142,7 @@ export default class ProductCategoryService {
     data: ProductTypes.CreateProductCategoryDTO[],
     @MedusaContext() sharedContext: Context = {}
   ): Promise<InferEntityType<typeof ProductCategory>[]> {
-    return await (
-      this.productCategoryRepository_ as unknown as ProductCategoryRepository
-    ).create(data, sharedContext)
+    return await this.productCategoryRepository_.create(data, sharedContext)
   }
 
   @InjectTransactionManager("productCategoryRepository_")
@@ -154,9 +150,7 @@ export default class ProductCategoryService {
     data: UpdateCategoryInput[],
     @MedusaContext() sharedContext: Context = {}
   ): Promise<InferEntityType<typeof ProductCategory>[]> {
-    return await (
-      this.productCategoryRepository_ as unknown as ProductCategoryRepository
-    ).update(data, sharedContext)
+    return await this.productCategoryRepository_.update(data, sharedContext)
   }
 
   @InjectTransactionManager("productCategoryRepository_")
@@ -172,9 +166,10 @@ export default class ProductCategoryService {
     ids: string[],
     @MedusaContext() sharedContext?: Context
   ): Promise<Record<string, string[]> | void> {
-    return (await (
-      this.productCategoryRepository_ as unknown as ProductCategoryRepository
-    ).softDelete(ids, sharedContext)) as any
+    return (await this.productCategoryRepository_.softDelete(
+      ids,
+      sharedContext
+    )) as any
   }
 
   @InjectTransactionManager("productCategoryRepository_")
@@ -182,8 +177,9 @@ export default class ProductCategoryService {
     ids: string[],
     @MedusaContext() sharedContext?: Context
   ): Promise<Record<string, string[]> | void> {
-    return (await (
-      this.productCategoryRepository_ as unknown as ProductCategoryRepository
-    ).restore(ids, sharedContext)) as any
+    return (await this.productCategoryRepository_.restore(
+      ids,
+      sharedContext
+    )) as any
   }
 }

@@ -5,16 +5,19 @@ import {
   AuthIdentityProviderService,
   EmailPassAuthProviderOptions,
   Logger,
+  Query,
 } from "@medusajs/framework/types"
 import {
   AbstractAuthModuleProvider,
   isString,
   MedusaError,
+  ContainerRegistrationKeys,
 } from "@medusajs/framework/utils"
 import Scrypt from "scrypt-kdf"
 
 type InjectedDependencies = {
   logger: Logger
+  [ContainerRegistrationKeys.QUERY]: Query
 }
 
 interface LocalServiceConfig extends EmailPassAuthProviderOptions {}
@@ -25,15 +28,17 @@ export class EmailPassAuthService extends AbstractAuthModuleProvider {
 
   protected config_: LocalServiceConfig
   protected logger_: Logger
+  protected query_: Query
 
   constructor(
-    { logger }: InjectedDependencies,
+    { logger, [ContainerRegistrationKeys.QUERY]: query }: InjectedDependencies,
     options: EmailPassAuthProviderOptions
   ) {
     // @ts-ignore
     super(...arguments)
     this.config_ = options
     this.logger_ = logger
+    this.query_ = query
   }
 
   protected async hashPassword(password: string) {
@@ -98,6 +103,28 @@ export class EmailPassAuthService extends AbstractAuthModuleProvider {
     return copy
   }
 
+  private async getStoresByUserId(userId: string) {
+    try {
+      if (!this.query_) {
+        this.logger_.warn("Query service not available for store lookup")
+        return []
+      }
+
+      // Query stores related to the user
+      const storesResponse = await this.query_.graph({
+        entity: "store",
+        fields: ["id", "name"],
+        filters: { user_id: userId },
+      })
+
+      // Medusa's query.graph returns an object: { data: [], metadata?: ... }
+      return storesResponse?.data || []
+    } catch (error) {
+      this.logger_.error("Error fetching stores by user ID:", error)
+      return []
+    }
+  }
+
   async authenticate(
     userData: AuthenticationInput,
     authIdentityService: AuthIdentityProviderService
@@ -150,6 +177,22 @@ export class EmailPassAuthService extends AbstractAuthModuleProvider {
           (pi) => pi.provider === this.provider
         )!
         delete providerIdentity.provider_metadata?.password
+
+        // 🚀 Fetch store_id using query service
+        try {
+          const userId = authIdentity?.app_metadata?.user_id as string
+          const stores = await this.getStoresByUserId(userId)
+          // Add store_id to auth metadata if store exists
+          if (stores.length > 0) {
+            copy.app_metadata = {
+              ...copy.app_metadata,
+              store_id: stores[0].id, // Using first store
+            }
+          }
+        } catch (error) {
+          this.logger_.error("Error adding store_id to auth metadata:", error)
+          // Continue with authentication even if store lookup fails
+        }
 
         return {
           success,

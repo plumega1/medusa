@@ -23,7 +23,7 @@ export const GET = async (
 ) => {
   const [category] = await refetchEntities(
     "product_category",
-    { id: req.params.id, ...req.filterableFields },
+    { id: req.params.id, store_id: req.auth_context.store_id, ...req.filterableFields },
     req.scope,
     req.queryConfig.fields
   )
@@ -43,9 +43,10 @@ export const POST = async (
   res: MedusaResponse<AdminProductCategoryResponse>
 ) => {
   const { id } = req.params
+  const store_id = req.auth_context.store_id
 
   await updateProductCategoriesWorkflow(req.scope).run({
-    input: { selector: { id }, update: req.validatedBody },
+    input: { selector: { id: id , store_id: store_id }, update: req.validatedBody },
   })
 
   const [category] = await refetchEntities(

@@ -15,9 +15,15 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<HttpTypes.AdminProductListParams>,
   res: MedusaResponse<HttpTypes.AdminProductListResponse>
 ) => {
+  const storeId = req.auth_context?.store_id
+
+  // 🔒 Inject store_id into filterable fields for security
+  req.filterableFields = {
+    ...req.filterableFields,
+    store_id: storeId,
+  }
+
   if (featureFlagRouter.isFeatureEnabled(IndexEngineFeatureFlag.key)) {
-    // Use regular list when no filters are provided
-    // TODO: Tags and categories are not supported by the index engine yet
     if (
       Object.keys(req.filterableFields).length === 0 ||
       isPresent(req.filterableFields.tags) ||
@@ -62,6 +68,7 @@ async function getProductsWithIndexEngine(
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
 
   const filters: Record<string, any> = req.filterableFields
+
   if (isPresent(filters.sales_channel_id)) {
     const salesChannelIds = filters.sales_channel_id
 
@@ -94,10 +101,14 @@ export const POST = async (
   >,
   res: MedusaResponse<HttpTypes.AdminProductResponse>
 ) => {
-  const { additional_data, ...products } = req.validatedBody
+  const storeId = req.auth_context?.store_id
+  const { additional_data, ...productBody } = req.validatedBody
+
+  // 🔒 Inject store_id while creating the product
+  const productToCreate = { ...productBody, store_id: storeId }
 
   const { result } = await createProductsWorkflow(req.scope).run({
-    input: { products: [products], additional_data },
+    input: { products: [productToCreate], additional_data },
   })
 
   const product = await refetchEntity(

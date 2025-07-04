@@ -6,6 +6,7 @@ import {
 
 export const refetchReservation = async (
   reservationId: string,
+  storeId: string,
   scope: MedusaContainer,
   fields: string[]
 ) => {
@@ -13,7 +14,7 @@ export const refetchReservation = async (
   const queryObject = remoteQueryObjectFromString({
     entryPoint: "reservation",
     variables: {
-      filters: { id: reservationId },
+      filters: { id: reservationId, store_id: storeId },
     },
     fields: fields,
   })

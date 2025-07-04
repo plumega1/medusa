@@ -16,11 +16,11 @@ export const GET = async (
   res: MedusaResponse<HttpTypes.AdminCollectionListResponse>
 ) => {
   const remoteQuery = req.scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
-
+  const store_id = req.auth_context.store_id
   const query = remoteQueryObjectFromString({
     entryPoint: "product_collection",
     variables: {
-      filters: req.filterableFields,
+      filters: {store_id: store_id, ...req.filterableFields},
       ...req.queryConfig.pagination,
     },
     fields: req.queryConfig.fields,
@@ -40,14 +40,16 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<AdminCreateCollectionType & AdditionalData>,
   res: MedusaResponse<HttpTypes.AdminCollectionResponse>
 ) => {
-  const { additional_data, ...rest } = req.validatedBody
+  const store_id = req.auth_context.store_id
+  const {additional_data, ...rest } = req.validatedBody
 
   const { result } = await createCollectionsWorkflow(req.scope).run({
-    input: { collections: [rest], additional_data },
+    input: { collections: [{store_id: store_id, ...rest}], additional_data },
   })
 
   const collection = await refetchCollection(
     result[0].id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )

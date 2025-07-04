@@ -18,6 +18,7 @@ export interface CreateInventoryItemInput {
    * The SKU of the inventory item.
    */
   sku?: string | null
+  store_id?: string
   /**
    * The origin country of the inventory item.
    */

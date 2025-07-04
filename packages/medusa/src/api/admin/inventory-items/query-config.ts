@@ -14,6 +14,7 @@ export const defaultAdminLocationLevelFields = [
 
 export const defaultAdminInventoryItemFields = [
   "id",
+  "store_id",
   "sku",
   "title",
   "description",

@@ -14,6 +14,7 @@ export const POST = async (
   res: MedusaResponse<AdminProductCategoryResponse>
 ) => {
   const { id } = req.params
+  const store_id = req.auth_context.store_id
 
   await batchLinkProductsToCategoryWorkflow(req.scope).run({
     input: { id, ...req.validatedBody },
@@ -21,7 +22,7 @@ export const POST = async (
 
   const category = await refetchEntity(
     "product_category",
-    id,
+    {id, store_id},
     req.scope,
     req.queryConfig.fields
   )

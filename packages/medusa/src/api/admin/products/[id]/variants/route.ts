@@ -56,11 +56,13 @@ export const POST = async (
   res: MedusaResponse<HttpTypes.AdminProductResponse>
 ) => {
   const productId = req.params.id
+  const store_id = req.auth_context.store_id
   const { additional_data, ...rest } = req.validatedBody
 
   const input = [
     {
       ...rest,
+      store_id: store_id,
       product_id: productId,
     },
   ]

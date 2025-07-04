@@ -1,5 +1,6 @@
 export const defaults = [
   "id",
+  "store_id",
   "name",
   "description",
   "handle",
@@ -16,6 +17,7 @@ export const defaults = [
 
 export const allowed = [
   "id",
+  "store_id",
   "name",
   "description",
   "handle",

@@ -31,7 +31,7 @@ export const createAdminUser = async (
   const user = await userModule.createUsers({
     first_name: "Admin",
     last_name: "User",
-    email: "admin@medusa.js",
+    email: "admin@medusa.js"
   })
 
   const hashConfig = { logN: 15, r: 8, p: 1 }

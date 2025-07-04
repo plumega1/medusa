@@ -2,7 +2,7 @@ import {
   ContainerRegistrationKeys,
   MedusaError,
 } from "@medusajs/framework/utils"
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { AuthenticatedMedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 
 import {
   deleteInventoryLevelsWorkflow,
@@ -13,9 +13,10 @@ import { refetchInventoryItem } from "../../../helpers"
 import { AdminUpdateInventoryLocationLevelType } from "../../../validators"
 
 export const DELETE = async (
-  req: MedusaRequest,
+  req: AuthenticatedMedusaRequest,
   res: MedusaResponse<HttpTypes.AdminInventoryLevelDeleteResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const { id, location_id } = req.params
 
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
@@ -52,6 +53,7 @@ export const DELETE = async (
 
   const inventoryItem = await refetchInventoryItem(
     id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )
@@ -65,9 +67,10 @@ export const DELETE = async (
 }
 
 export const POST = async (
-  req: MedusaRequest<AdminUpdateInventoryLocationLevelType>,
+  req: AuthenticatedMedusaRequest<AdminUpdateInventoryLocationLevelType>,
   res: MedusaResponse<HttpTypes.AdminInventoryItemResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const { id, location_id } = req.params
   await updateInventoryLevelsWorkflow(req.scope).run({
     input: {
@@ -77,6 +80,7 @@ export const POST = async (
 
   const inventoryItem = await refetchInventoryItem(
     id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )

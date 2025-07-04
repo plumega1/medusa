@@ -18,11 +18,25 @@ import {
   AdminUpdateInventoryLocationLevel,
 } from "./validators"
 
+const applyStoreFilter = () => {
+  return (req, res, next) => {
+    const storeId = req.auth_context?.store_id
+    if (storeId) {
+      if (!req.filterableFields) {
+        req.filterableFields = {}
+      }
+      req.filterableFields.store_id = storeId
+    }
+    next()
+  }
+}
+
 export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
   {
     method: ["GET"],
     matcher: "/admin/inventory-items",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetInventoryItemsParams,
         QueryConfig.listTransformQueryConfig
@@ -33,6 +47,7 @@ export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["GET"],
     matcher: "/admin/inventory-items/:id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetInventoryItemParams,
         QueryConfig.retrieveTransformQueryConfig
@@ -43,6 +58,7 @@ export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/admin/inventory-items",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminCreateInventoryItem),
       validateAndTransformQuery(
         AdminGetInventoryItemParams,
@@ -56,7 +72,7 @@ export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
     bodyParser: {
       sizeLimit: DEFAULT_BATCH_ENDPOINTS_SIZE_LIMIT,
     },
-    middlewares: [validateAndTransformBody(AdminBatchInventoryItemLevels)],
+    middlewares: [applyStoreFilter(),validateAndTransformBody(AdminBatchInventoryItemLevels)],
   },
   {
     method: ["POST"],
@@ -64,12 +80,13 @@ export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
     bodyParser: {
       sizeLimit: DEFAULT_BATCH_ENDPOINTS_SIZE_LIMIT,
     },
-    middlewares: [validateAndTransformBody(AdminBatchInventoryItemLevels)],
+    middlewares: [applyStoreFilter(), validateAndTransformBody(AdminBatchInventoryItemLevels)],
   },
   {
     method: ["POST"],
     matcher: "/admin/inventory-items/:id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminUpdateInventoryItem),
       validateAndTransformQuery(
         AdminGetInventoryItemParams,
@@ -81,6 +98,7 @@ export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["GET"],
     matcher: "/admin/inventory-items/:id/location-levels",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetInventoryLocationLevelsParams,
         QueryConfig.listLocationLevelsTransformQueryConfig
@@ -91,6 +109,7 @@ export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/admin/inventory-items/:id/location-levels",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminCreateInventoryLocationLevel),
       validateAndTransformQuery(
         AdminGetInventoryItemParams,
@@ -105,6 +124,7 @@ export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
       sizeLimit: DEFAULT_BATCH_ENDPOINTS_SIZE_LIMIT,
     },
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminBatchInventoryItemLocationsLevel),
       validateAndTransformQuery(
         AdminGetInventoryLocationLevelParams,
@@ -116,6 +136,7 @@ export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["DELETE"],
     matcher: "/admin/inventory-items/:id/location-levels/:location_id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetInventoryItemParams,
         QueryConfig.retrieveTransformQueryConfig
@@ -126,6 +147,7 @@ export const adminInventoryRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/admin/inventory-items/:id/location-levels/:location_id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminUpdateInventoryLocationLevel),
       validateAndTransformQuery(
         AdminGetInventoryItemParams,

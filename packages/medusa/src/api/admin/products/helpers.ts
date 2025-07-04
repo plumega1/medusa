@@ -106,13 +106,14 @@ export const buildRules = (price: PriceDTO) => {
 export const refetchVariant = async (
   variantId: string,
   scope: MedusaContainer,
-  fields: string[]
+  fields: string[],
+  context?: { store_id?: string } // ✅ Add this
 ) => {
   const remoteQuery = scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
   const queryObject = remoteQueryObjectFromString({
     entryPoint: "product_variant",
     variables: {
-      filters: { id: variantId },
+      filters: { id: variantId, store_id: context?.store_id },
     },
     fields: remapKeysForVariant(fields ?? []),
   })
@@ -125,7 +126,8 @@ export const refetchVariant = async (
 export const refetchBatchProducts = async (
   batchResult: BatchMethodResponse<ProductDTO>,
   scope: MedusaContainer,
-  fields: string[]
+  fields: string[],
+  context?: { store_id?: string } // ✅ Add this
 ): Promise<BatchResponse<ProductDTO>> => {
   const remoteQuery = scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
   let created = Promise.resolve<ProductDTO[]>([])
@@ -135,7 +137,7 @@ export const refetchBatchProducts = async (
     const createdQuery = remoteQueryObjectFromString({
       entryPoint: "product",
       variables: {
-        filters: { id: batchResult.created.map((p) => p.id) },
+        filters: { id: batchResult.created.map((p) => p.id), store_id: context?.store_id },
       },
       fields: remapKeysForProduct(fields ?? []),
     })
@@ -170,7 +172,8 @@ export const refetchBatchProducts = async (
 export const refetchBatchVariants = async (
   batchResult: BatchMethodResponse<ProductVariantDTO>,
   scope: MedusaContainer,
-  fields: string[]
+  fields: string[],
+  context?: { store_id?: string } // ✅ Add this
 ): Promise<BatchResponse<ProductVariantDTO>> => {
   const remoteQuery = scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
   let created = Promise.resolve<ProductVariantDTO[]>([])
@@ -180,7 +183,7 @@ export const refetchBatchVariants = async (
     const createdQuery = remoteQueryObjectFromString({
       entryPoint: "variant",
       variables: {
-        filters: { id: batchResult.created.map((v) => v.id) },
+        filters: { id: batchResult.created.map((v) => v.id), store_id: context?.store_id },
       },
       fields: remapKeysForVariant(fields ?? []),
     })

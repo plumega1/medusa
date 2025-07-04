@@ -1,5 +1,5 @@
 import { MedusaError } from "@medusajs/framework/utils"
-import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { AuthenticatedMedusaRequest, MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import {
   deleteInventoryItemWorkflow,
   updateInventoryItemsWorkflow,
@@ -12,12 +12,14 @@ import { refetchInventoryItem } from "../helpers"
 import { HttpTypes } from "@medusajs/framework/types"
 
 export const GET = async (
-  req: MedusaRequest<AdminGetInventoryItemParamsType>,
+  req: AuthenticatedMedusaRequest<AdminGetInventoryItemParamsType>,
   res: MedusaResponse<HttpTypes.AdminInventoryItemResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const { id } = req.params
   const inventoryItem = await refetchInventoryItem(
     id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )
@@ -35,10 +37,11 @@ export const GET = async (
 
 // Update inventory item
 export const POST = async (
-  req: MedusaRequest<AdminUpdateInventoryItemType>,
+  req: AuthenticatedMedusaRequest<AdminUpdateInventoryItemType>,
   res: MedusaResponse<HttpTypes.AdminInventoryItemResponse>
 ) => {
   const { id } = req.params
+  const store_id = req.auth_context.store_id
 
   await updateInventoryItemsWorkflow(req.scope).run({
     input: {
@@ -48,6 +51,7 @@ export const POST = async (
 
   const inventoryItem = await refetchInventoryItem(
     id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )

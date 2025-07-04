@@ -192,6 +192,7 @@ const buildVariantItemCreateMap = (data: {
       description: variantInput.title,
       hs_code: variantInput.hs_code,
       requires_shipping: true,
+      store_id: variantInput.store_id
     }
   }
 

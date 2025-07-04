@@ -16,11 +16,12 @@ export const GET = async (
   res: MedusaResponse<HttpTypes.AdminReservationListResponse>
 ) => {
   const remoteQuery = req.scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
+  const store_id = req.auth_context.store_id
 
   const queryObject = remoteQueryObjectFromString({
     entryPoint: "reservation",
     variables: {
-      filters: req.filterableFields,
+      filters: {store_id: store_id, ...req.filterableFields},
       ...req.queryConfig.pagination,
     },
     fields: req.queryConfig.fields,
@@ -40,7 +41,8 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<HttpTypes.AdminCreateReservation>,
   res: MedusaResponse<HttpTypes.AdminReservationResponse>
 ) => {
-  const input = [req.validatedBody]
+  const store_id = req.auth_context.store_id
+  const input = [{store_id: store_id, ...req.validatedBody}]
 
   const { result } = await createReservationsWorkflow(req.scope).run({
     input: { reservations: input },
@@ -48,6 +50,7 @@ export const POST = async (
 
   const reservation = await refetchReservation(
     result[0].id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )
