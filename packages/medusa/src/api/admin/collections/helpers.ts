@@ -6,6 +6,7 @@ import {
 
 export const refetchCollection = async (
   collectionId: string,
+  storeId: string,
   scope: MedusaContainer,
   fields: string[]
 ) => {
@@ -13,7 +14,7 @@ export const refetchCollection = async (
   const queryObject = remoteQueryObjectFromString({
     entryPoint: "product_collection",
     variables: {
-      filters: { id: collectionId },
+      filters: { id: collectionId, store_id: storeId },
     },
     fields: fields,
   })

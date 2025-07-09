@@ -8,6 +8,7 @@ enum ProductStatus {
 
 type Product {
   id: ID!
+  store_id: String
   title: String!
   handle: String!
   subtitle: String
@@ -71,6 +72,7 @@ type ProductVariant {
 type ProductCategory {
   id: ID!
   name: String!
+  store_id: String
   description: String!
   handle: String!
   is_active: Boolean!
@@ -95,6 +97,7 @@ type ProductTag {
 
 type ProductCollection {
   id: ID!
+  store_id: String
   title: String!
   handle: String!
   metadata: JSON

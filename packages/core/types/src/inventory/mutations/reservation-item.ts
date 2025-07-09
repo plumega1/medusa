@@ -46,6 +46,7 @@ export interface CreateReservationItemInput {
    * The ID of the associated inventory item.
    */
   inventory_item_id: string
+  store_id?: string
   /**
    * The ID of the associated location.
    */

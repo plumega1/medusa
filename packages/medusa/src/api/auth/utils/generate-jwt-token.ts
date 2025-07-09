@@ -27,18 +27,21 @@ export function generateJwtTokenForAuthIdentity(
     | undefined
 
   return generateJwtToken(
-    {
-      actor_id: entityId ?? "",
-      actor_type: actorType,
-      auth_identity_id: authIdentity?.id ?? "",
-      app_metadata: {
-        [entityIdKey]: entityId,
-      },
+  {
+    actor_id: entityId ?? "",
+    actor_type: actorType,
+    auth_identity_id: authIdentity?.id ?? "",
+    store_id: authIdentity?.app_metadata?.store_id ?? "", // ✅ Add this
+    app_metadata: {
+      [entityIdKey]: entityId,
+      store_id: authIdentity?.app_metadata?.store_id ?? "", // Optional: keep for redundancy
     },
-    {
-      secret,
-      expiresIn: expiresIn_,
-      jwtOptions: options,
-    }
-  )
+  },
+  {
+    secret,
+    expiresIn: expiresIn_,
+    jwtOptions: options,
+  }
+)
+
 }

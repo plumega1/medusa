@@ -4,6 +4,7 @@ import Product from "./product"
 const ProductCategory = model
   .define("ProductCategory", {
     id: model.id({ prefix: "pcat" }).primaryKey(),
+    store_id: model.text().searchable(), // Added store_id for multi-tenancy
     name: model.text().searchable(),
     description: model.text().searchable().default(""),
     handle: model.text().searchable(),

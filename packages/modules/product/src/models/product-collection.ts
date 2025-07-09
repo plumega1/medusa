@@ -5,6 +5,7 @@ const ProductCollection = model
   .define("ProductCollection", {
     id: model.id({ prefix: "pcol" }).primaryKey(),
     title: model.text().searchable(),
+    store_id: model.text().searchable(), // Added store_id for multi-tenancy
     handle: model.text(),
     metadata: model.json().nullable(),
     products: model.hasMany(() => Product, {

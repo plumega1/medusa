@@ -49,6 +49,27 @@ export interface IStoreModuleService extends IModuleService {
   createStores(data: CreateStoreDTO, sharedContext?: Context): Promise<StoreDTO>
 
   /**
+   * This method retrieves stores by user ID for multi-tenancy support.
+   *
+   * @param {string} userId - The ID of the user whose stores to retrieve.
+   * @param {object} config - Configuration object for the query.
+   * @param {string[]} config.relations - Relations to include in the response.
+   * @param {Context} sharedContext - A context used to share resources, such as transaction manager, between the application and the module.
+   * @returns {Promise<StoreDTO[]>} The stores belonging to the user.
+   *
+   * @example
+   * const userStores = await storeModuleService.retrieveStoresByUserId(
+   *   "user_123",
+   *   { relations: ["supported_currencies"] }
+   * )
+   */
+  retrieveStoresByUserId(
+    userId: string,
+    config?: { relations?: string[] },
+    sharedContext?: Context
+  ): Promise<StoreDTO[]>
+
+  /**
    * This method updates or creates stores if they don't exist.
    *
    * @param {UpsertStoreDTO[]} data - The attributes in the stores to be created or updated.

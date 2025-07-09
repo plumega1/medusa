@@ -18,10 +18,12 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<AdminGetReservationParamsType>,
   res: MedusaResponse<HttpTypes.AdminReservationResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const { id } = req.params
 
   const reservation = await refetchReservation(
     id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )
@@ -41,6 +43,7 @@ export const POST = async (
   res: MedusaResponse<HttpTypes.AdminReservationResponse>
 ) => {
   const { id } = req.params
+  const store_id = req.auth_context.store_id
   await updateReservationsWorkflow(req.scope).run({
     input: {
       updates: [{ ...req.validatedBody, id }],
@@ -49,6 +52,7 @@ export const POST = async (
 
   const reservation = await refetchReservation(
     id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )

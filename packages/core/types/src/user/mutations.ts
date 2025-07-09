@@ -22,6 +22,8 @@ export interface CreateUserDTO {
    */
   avatar_url?: string | null
 
+  store_id?: string
+
   /**
    * Holds custom data in key-value pairs.
    */

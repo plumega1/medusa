@@ -1,6 +1,7 @@
 export const defaultAdminProductsVariantFields = [
   "id",
   "product_id",
+  "store_id",
   "title",
   "sku",
   "allow_backorder",
@@ -38,7 +39,10 @@ export const listVariantConfig = {
   isList: true,
 }
 
-export const defaultAdminProductsOptionFields = ["id", "title"]
+export const defaultAdminProductsOptionFields = [
+  "id",
+  "title",
+]
 
 export const retrieveOptionConfig = {
   defaults: defaultAdminProductsOptionFields,
@@ -53,6 +57,7 @@ export const listOptionConfig = {
 
 export const defaultAdminProductFields = [
   "id",
+  "store_id",
   "title",
   "subtitle",
   "status",

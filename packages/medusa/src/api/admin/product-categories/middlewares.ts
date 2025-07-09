@@ -12,11 +12,25 @@ import {
   AdminUpdateProductCategory,
 } from "./validators"
 
+const applyStoreFilter = () => {
+  return (req, res, next) => {
+    const storeId = req.auth_context?.store_id
+    if (storeId) {
+      if (!req.filterableFields) {
+        req.filterableFields = {}
+      }
+      req.filterableFields.store_id = storeId
+    }
+    next()
+  }
+}
+
 export const adminProductCategoryRoutesMiddlewares: MiddlewareRoute[] = [
   {
     method: ["GET"],
     matcher: "/admin/product-categories",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminProductCategoriesParams,
         QueryConfig.listProductCategoryConfig
@@ -27,6 +41,7 @@ export const adminProductCategoryRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["GET"],
     matcher: "/admin/product-categories/:id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminProductCategoryParams,
         QueryConfig.retrieveProductCategoryConfig
@@ -37,6 +52,7 @@ export const adminProductCategoryRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/admin/product-categories",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminCreateProductCategory),
       validateAndTransformQuery(
         AdminProductCategoryParams,
@@ -48,6 +64,7 @@ export const adminProductCategoryRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/admin/product-categories/:id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminUpdateProductCategory),
       validateAndTransformQuery(
         AdminProductCategoryParams,
@@ -58,12 +75,13 @@ export const adminProductCategoryRoutesMiddlewares: MiddlewareRoute[] = [
   {
     method: ["DELETE"],
     matcher: "/admin/product-categories/:id",
-    middlewares: [],
+    middlewares: [applyStoreFilter(),],
   },
   {
     method: ["POST"],
     matcher: "/admin/product-categories/:id/products",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(createLinkBody()),
       validateAndTransformQuery(
         AdminProductCategoryParams,

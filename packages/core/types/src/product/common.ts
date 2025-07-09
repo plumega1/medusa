@@ -350,6 +350,7 @@ export interface CreateProductCategoryDTO {
    * The product category's name.
    */
   name: string
+  store_id: string
   /**
    * The product category's description.
    */
@@ -716,6 +717,7 @@ export interface FilterableProductProps
    * Filters only or excluding gift card products
    */
   is_giftcard?: boolean
+  store_id?: string
   /**
    * Filters on a product's tags.
    */
@@ -955,6 +957,7 @@ export interface FilterableProductCategoryProps
    * The IDs to filter product categories by.
    */
   id?: string | string[]
+  store_id?: string
   /**
    * The names to filter product categories by.
    */
@@ -1000,6 +1003,7 @@ export interface CreateProductCollectionDTO {
    * The product collection's title.
    */
   title: string
+  store_id: string
   /**
    * The product collection's handle. If not provided, the value of this attribute is set to the slug version of the title.
    */
@@ -1276,6 +1280,7 @@ export interface CreateProductVariantDTO {
    * The id of the product
    */
   product_id?: string
+  store_id?: string
   /**
    * The tile of the product variant.
    */

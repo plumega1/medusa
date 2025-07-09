@@ -1,6 +1,7 @@
 export const defaultAdminCollectionFields = [
   "id",
   "title",
+  "store_id",
   "handle",
   "created_at",
   "updated_at",

@@ -12,7 +12,7 @@ export const GET = async (
 ) => {
   const { rows: product_categories, metadata } = await refetchEntities(
     "product_category",
-    req.filterableFields,
+    {store_id: req.auth_context.store_id, ...req.filterableFields },
     req.scope,
     req.queryConfig.fields,
     req.queryConfig.pagination
@@ -30,13 +30,14 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<HttpTypes.AdminCreateProductCategory>,
   res: MedusaResponse<HttpTypes.AdminProductCategoryResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const { result } = await createProductCategoriesWorkflow(req.scope).run({
-    input: { product_categories: [req.validatedBody] },
+    input: { product_categories: [{store_id: store_id, ...req.validatedBody}] },
   })
 
   const [category] = await refetchEntities(
     "product_category",
-    { id: result[0].id, ...req.filterableFields },
+    { id: result[0].id, store_id: store_id, ...req.filterableFields },
     req.scope,
     req.queryConfig.fields
   )

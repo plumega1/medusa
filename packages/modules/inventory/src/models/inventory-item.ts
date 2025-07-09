@@ -5,6 +5,7 @@ import ReservationItem from "./reservation-item"
 const InventoryItem = model
   .define("InventoryItem", {
     id: model.id({ prefix: "iitem" }).primaryKey(),
+    store_id: model.text().searchable(),
     sku: model.text().searchable().nullable(),
     origin_country: model.text().nullable(),
     hs_code: model.text().searchable().nullable(),

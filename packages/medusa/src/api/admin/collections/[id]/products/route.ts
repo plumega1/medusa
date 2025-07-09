@@ -10,6 +10,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<LinkMethodRequest>,
   res: MedusaResponse<HttpTypes.AdminCollectionResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const id = req.params.id
   const { add = [], remove = [] } = req.validatedBody
 
@@ -24,6 +25,7 @@ export const POST = async (
 
   const collection = await refetchCollection(
     req.params.id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )

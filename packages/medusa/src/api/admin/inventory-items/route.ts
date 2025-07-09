@@ -15,12 +15,14 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<HttpTypes.AdminCreateInventoryItem>,
   res: MedusaResponse<HttpTypes.AdminInventoryItemResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const { result } = await createInventoryItemsWorkflow(req.scope).run({
-    input: { items: [req.validatedBody] },
+    input: { items: [{store_id: store_id, ...req.validatedBody}] },
   })
 
   const inventoryItem = await refetchInventoryItem(
     result[0].id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )
@@ -32,12 +34,13 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<HttpTypes.AdminInventoryItemParams>,
   res: MedusaResponse<HttpTypes.AdminInventoryItemListResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const remoteQuery = req.scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
 
   const query = remoteQueryObjectFromString({
     entryPoint: "inventory_items",
     variables: {
-      filters: req.filterableFields,
+      filters: {store_id: store_id, ...req.filterableFields},
       ...req.queryConfig.pagination,
     },
     fields: req.queryConfig.fields,

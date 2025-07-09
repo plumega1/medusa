@@ -2,6 +2,7 @@ import { defaultAdminInventoryItemFields } from "../inventory-items/query-config
 
 export const defaultAdminReservationFields = [
   "id",
+  "store_id",
   "location_id",
   "inventory_item_id",
   "quantity",

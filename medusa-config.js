@@ -21,7 +21,7 @@ module.exports = defineConfig({
   modules: [
     {
       resolve: "@medusajs/medusa/auth",
-      dependencies: [Modules.CACHE, ContainerRegistrationKeys.LOGGER],
+      dependencies: [Modules.CACHE, ContainerRegistrationKeys.LOGGER, ContainerRegistrationKeys.QUERY],
       options: {
         providers: [
           // other providers...

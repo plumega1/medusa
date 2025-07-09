@@ -17,6 +17,7 @@ export interface UpdateProviderJwtPayload {
   entity_id: string
   actor_type: string
   provider: string
+  store_id: string
 }
 
 // Middleware to validate that a token is valid
@@ -76,6 +77,7 @@ export const validateToken = () => {
       actor_type,
       auth_identity_id: providerIdentity.auth_identity_id!,
       actor_id: providerIdentity.entity_id,
+      store_id: token?.store_id,
       app_metadata: {},
     }
 

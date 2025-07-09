@@ -20,6 +20,82 @@ export class ProductRepository extends DALUtils.mikroOrmBaseRepositoryFactory(
   }
 
   /**
+   * Override the base find method to add store_id filtering
+   */
+  async find(
+    findOptions: DAL.FindOptions<typeof Product> = { where: {} },
+    context: Context = {}
+  ): Promise<InferEntityType<typeof Product>[]> {
+    // Add store_id filtering if present in context
+    if (context.store_id && !findOptions.where?.store_id) {
+      findOptions.where = {
+        ...findOptions.where,
+        store_id: context.store_id,
+      }
+    }
+
+    await this.mutateNotInCategoriesConstraints(findOptions, context)
+    
+    return super.find(findOptions, context)
+  }
+
+  /**
+   * Override the base findAndCount method to add store_id filtering
+   */
+  async findAndCount(
+    findOptions: DAL.FindOptions<typeof Product> = { where: {} },
+    context: Context = {}
+  ): Promise<[InferEntityType<typeof Product>[], number]> {
+    // Add store_id filtering if present in context
+    if (context.store_id && !findOptions.where?.store_id) {
+      findOptions.where = {
+        ...findOptions.where,
+        store_id: context.store_id,
+      }
+    }
+
+    await this.mutateNotInCategoriesConstraints(findOptions, context)
+    
+    return super.findAndCount(findOptions, context)
+  }
+
+  /**
+   * Override create to automatically add store_id
+   */
+  async create(
+  data: any[],
+  context: Context = {}
+  ): Promise<InferEntityType<typeof Product>[]> {
+    // Add store_id to each item if present in context and not already in data
+    if (context.store_id) {
+      data = data.map(item => ({
+        ...item,
+        store_id: item.store_id || context.store_id
+      }))
+    }
+
+    return super.create(data, context)
+  }
+
+  /**
+   * Override upsert to automatically add store_id
+   */
+  async upsert(
+    data: any[],
+    context: Context = {}
+  ): Promise<InferEntityType<typeof Product>[]> {
+    // Add store_id to each item if present in context
+    if (context.store_id) {
+      data = data.map(item => ({
+        ...item,
+        store_id: item.store_id || context.store_id
+      }))
+    }
+
+    return super.upsert(data, context)
+  }
+
+  /**
    * Identify the relations to load for the given update.
    * @param update
    * @returns
@@ -81,7 +157,11 @@ export class ProductRepository extends DALUtils.mikroOrmBaseRepositoryFactory(
       ProductRepository.#getProductDeepUpdateRelationsToLoad(productsToUpdate)
 
     const findOptions = buildQuery(
-      { id: productIdsToUpdate },
+      { 
+        id: productIdsToUpdate,
+        // Add store_id filtering for updates
+        ...(context.store_id && { store_id: context.store_id })
+      },
       {
         relations: relationsToLoad,
         take: productsToUpdate.length,
@@ -182,13 +262,20 @@ export class ProductRepository extends DALUtils.mikroOrmBaseRepositoryFactory(
       "categories" in findOptions.where &&
       findOptions.where.categories?.id?.["$nin"]
     ) {
+      const whereClause: any = {
+        categories: {
+          id: { $in: findOptions.where.categories.id["$nin"] },
+        },
+      }
+
+      // Add store_id filtering for category constraint mutation
+      if (context.store_id) {
+        whereClause.store_id = context.store_id
+      }
+
       const productsInCategories = await manager.find(
         this.entity,
-        {
-          categories: {
-            id: { $in: findOptions.where.categories.id["$nin"] },
-          },
-        },
+        whereClause,
         {
           fields: ["id"],
         }

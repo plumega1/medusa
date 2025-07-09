@@ -37,6 +37,20 @@ import IndexEngineFeatureFlag from "../../../loaders/feature-flags/index-engine"
 
 const upload = multer({ storage: multer.memoryStorage() })
 
+const applyStoreFilter = () => {
+  return (req, res, next) => {
+    const storeId = req.auth_context?.store_id
+    if (storeId) {
+      if (!req.filterableFields) {
+        req.filterableFields = {}
+      }
+      req.filterableFields.store_id = storeId
+    }
+    next()
+  }
+}
+
+
 export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
   {
     method: ["GET"],
@@ -46,6 +60,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
         AdminGetProductsParams,
         QueryConfig.listProductQueryConfig
       ),
+      applyStoreFilter(),
       (req, res, next) => {
         if (featureFlagRouter.isFeatureEnabled(IndexEngineFeatureFlag.key)) {
           return next()
@@ -69,6 +84,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
         AdminGetProductParams,
         QueryConfig.retrieveProductQueryConfig
       ),
+      applyStoreFilter(),
     ],
   },
   {
@@ -81,6 +97,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
       validateAndTransformBody(
         createBatchBody(CreateProduct, AdminBatchUpdateProduct)
       ),
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetProductParams,
         QueryConfig.retrieveProductQueryConfig
@@ -95,22 +112,23 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
         AdminGetProductsParams,
         QueryConfig.listProductQueryConfig
       ),
+      applyStoreFilter(),
     ],
   },
   {
     method: ["POST"],
     matcher: "/admin/products/import",
-    middlewares: [upload.single("file")],
+    middlewares: [applyStoreFilter(),upload.single("file")],
   },
   {
     method: ["POST"],
     matcher: "/admin/products/imports",
-    middlewares: [validateAndTransformBody(AdminImportProducts)],
+    middlewares: [applyStoreFilter(),validateAndTransformBody(AdminImportProducts)],
   },
   {
     method: ["POST"],
     matcher: "/admin/products/import/:transaction_id/confirm",
-    middlewares: [],
+    middlewares: [applyStoreFilter()],
   },
   {
     method: ["GET"],
@@ -126,6 +144,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/admin/products/:id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminUpdateProduct),
       validateAndTransformQuery(
         AdminGetProductParams,
@@ -137,6 +156,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["DELETE"],
     matcher: "/admin/products/:id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetProductParams,
         QueryConfig.retrieveProductQueryConfig
@@ -147,6 +167,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["GET"],
     matcher: "/admin/products/:id/variants",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetProductVariantsParams,
         QueryConfig.listVariantConfig
@@ -157,6 +178,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/admin/products/:id/variants",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminCreateProductVariant),
       validateAndTransformQuery(
         AdminGetProductParams,
@@ -171,6 +193,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
       sizeLimit: DEFAULT_BATCH_ENDPOINTS_SIZE_LIMIT,
     },
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(
         createBatchBody(CreateProductVariant, AdminBatchUpdateProductVariant)
       ),
@@ -185,6 +208,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["GET"],
     matcher: "/admin/products/:id/variants/:variant_id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetProductVariantParams,
         QueryConfig.retrieveVariantConfig
@@ -195,6 +219,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/admin/products/:id/variants/:variant_id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminUpdateProductVariant),
       validateAndTransformQuery(
         AdminGetProductParams,
@@ -206,6 +231,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["DELETE"],
     matcher: "/admin/products/:id/variants/:variant_id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetProductParams,
         QueryConfig.retrieveProductQueryConfig
@@ -276,6 +302,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
       sizeLimit: DEFAULT_BATCH_ENDPOINTS_SIZE_LIMIT,
     },
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(
         createBatchBody(
           AdminBatchCreateVariantInventoryItem,
@@ -293,6 +320,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     method: ["POST"],
     matcher: "/admin/products/:id/variants/:variant_id/inventory-items",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminCreateVariantInventoryItem),
       validateAndTransformQuery(
         AdminGetProductVariantParams,
@@ -305,6 +333,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     matcher:
       "/admin/products/:id/variants/:variant_id/inventory-items/:inventory_item_id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformBody(AdminUpdateVariantInventoryItem),
       validateAndTransformQuery(
         AdminGetProductVariantParams,
@@ -317,6 +346,7 @@ export const adminProductRoutesMiddlewares: MiddlewareRoute[] = [
     matcher:
       "/admin/products/:id/variants/:variant_id/inventory-items/:inventory_item_id",
     middlewares: [
+      applyStoreFilter(),
       validateAndTransformQuery(
         AdminGetProductVariantParams,
         QueryConfig.retrieveVariantConfig
