@@ -63,9 +63,8 @@ Value.displayName = "Select.Value"
 
 const triggerVariants = cva({
   base: clx(
-    "bg-ui-bg-field shadow-buttons-neutral transition-fg flex w-full select-none items-center justify-between rounded-md outline-none",
+    "bg-ui-custom shadow-buttons-neutral transition-fg flex w-full select-none items-center justify-between rounded-md outline-none",
     "data-[placeholder]:text-ui-fg-muted text-ui-fg-base",
-    "hover:bg-ui-bg-field-hover",
     "focus-visible:shadow-borders-interactive-with-active data-[state=open]:!shadow-borders-interactive-with-active",
     "aria-[invalid=true]:border-ui-border-error aria-[invalid=true]:shadow-borders-error",
     "invalid:border-ui-border-error invalid:shadow-borders-error",
@@ -141,7 +140,7 @@ const Content = React.forwardRef<
       <RadixSelect.Content
         ref={ref}
         className={clx(
-          "bg-ui-bg-component text-ui-fg-base shadow-elevation-flyout relative max-h-[200px] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg",
+          "bg-ui-custom text-ui-fg-base shadow-elevation-flyout relative max-h-[200px] min-w-[var(--radix-select-trigger-width)] overflow-hidden rounded-lg",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
           "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
@@ -203,7 +202,7 @@ const Item = React.forwardRef<
     <RadixSelect.Item
       ref={ref}
       className={clx(
-        "bg-ui-bg-component txt-compact-small grid cursor-pointer grid-cols-[15px_1fr] items-center gap-x-2 rounded-[4px] px-2 py-1.5 outline-none transition-colors",
+        "bg-ui-custom txt-compact-small grid cursor-pointer grid-cols-[15px_1fr] items-center gap-x-2 rounded-[4px] px-2 py-1.5 outline-none transition-colors",
         "focus-visible:bg-ui-bg-component-hover",
         "active:bg-ui-bg-component-pressed",
         "data-[state=checked]:txt-compact-small-plus",

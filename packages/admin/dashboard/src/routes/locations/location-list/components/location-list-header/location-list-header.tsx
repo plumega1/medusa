@@ -13,7 +13,7 @@ export const LocationListHeader = () => {
           {t("stockLocations.list.description")}
         </Text>
       </div>
-      <Button size="small" className="shrink-0" variant="secondary" asChild>
+      <Button size="small" className="shrink-0" variant="primary" asChild>
         <Link to="create">{t("actions.create")}</Link>
       </Button>
     </Container>

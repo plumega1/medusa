@@ -999,6 +999,10 @@ export function getRouteMap({
                   path: "metadata/edit",
                   lazy: () => import("../../routes/store/store-metadata"),
                 },
+                {
+                  path: "colors/edit",
+                  lazy: () => import("../../routes/store/store-colors"),
+                },
               ],
             },
             {

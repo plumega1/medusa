@@ -189,7 +189,7 @@ export const CreateRegionForm = ({
         <RouteFocusModal.Header>
           <div className="flex items-center justify-end gap-x-2">
             <RouteFocusModal.Close asChild>
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="tertiary">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>
@@ -378,7 +378,7 @@ export const CreateRegionForm = ({
                       <StackedFocusModal.Footer>
                         <div className="flex items-center justify-end gap-x-2">
                           <StackedFocusModal.Close asChild>
-                            <Button variant="secondary" size="small">
+                            <Button variant="tertiary" size="small">
                               {t("actions.cancel")}
                             </Button>
                           </StackedFocusModal.Close>

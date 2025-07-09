@@ -2,6 +2,8 @@ import { useLoaderData } from "react-router-dom"
 
 import { useStore } from "../../../hooks/api/store"
 import { StoreGeneralSection } from "./components/store-general-section"
+import { ColorPicker } from "./components/color-picker"
+
 import { storeLoader } from "./loader"
 
 import { SingleColumnPageSkeleton } from "../../../components/common/skeleton"
@@ -39,6 +41,7 @@ export const StoreDetail = () => {
     >
       <StoreGeneralSection store={store} />
       <StoreCurrencySection store={store} />
+      <ColorPicker />
     </SingleColumnPage>
   )
 }

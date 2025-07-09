@@ -53,7 +53,7 @@ export const ReturnReasonListTable = () => {
             {t("returnReasons.subtitle")}
           </Text>
         </div>
-        <Button variant="secondary" size="small" asChild>
+        <Button variant="primary" size="small" asChild>
           <Link to="create">{t("actions.create")}</Link>
         </Button>
       </div>

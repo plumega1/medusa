@@ -81,7 +81,7 @@ export function OrderCreateShipmentForm({
         <RouteFocusModal.Header>
           <div className="flex items-center justify-end gap-x-2">
             <RouteFocusModal.Close asChild>
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="tertiary">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>

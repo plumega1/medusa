@@ -226,7 +226,7 @@ export const EditProductForm = ({ product }: EditProductFormProps) => {
         <RouteDrawer.Footer>
           <div className="flex items-center justify-end gap-x-2">
             <RouteDrawer.Close asChild>
-              <Button size="small" variant="secondary">
+              <Button size="small" variant="tertiary">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>

@@ -1,10 +1,7 @@
 import {
-  BookOpen,
-  CircleHalfSolid,
   EllipsisHorizontal,
   Keyboard,
   OpenRectArrowOut,
-  TimelineVertical,
   User as UserIcon,
   XMark,
 } from "@medusajs/icons"
@@ -28,7 +25,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useLogout, useMe } from "../../../hooks/api"
 import { queryClient } from "../../../lib/query-client"
 import { useGlobalShortcuts } from "../../../providers/keybind-provider/hooks"
-import { useTheme } from "../../../providers/theme-provider"
 
 export const UserMenu = () => {
   const { t } = useTranslation()
@@ -43,7 +39,7 @@ export const UserMenu = () => {
   }
 
   return (
-    <div>
+    <div className="bg-ui-custom">
       <DropdownMenu open={openMenu} onOpenChange={setOpenMenu}>
         <UserBadge />
         <DropdownMenu.Content className="min-w-[var(--radix-dropdown-menu-trigger-width)] max-w-[var(--radix-dropdown-menu-trigger-width)]">
@@ -56,24 +52,10 @@ export const UserMenu = () => {
             </Link>
           </DropdownMenu.Item>
           <DropdownMenu.Separator />
-          <DropdownMenu.Item asChild>
-            <Link to="https://docs.medusajs.com" target="_blank">
-              <BookOpen className="text-ui-fg-subtle mr-2" />
-              {t("app.menus.user.documentation")}
-            </Link>
-          </DropdownMenu.Item>
-          <DropdownMenu.Item asChild>
-            <Link to="https://medusajs.com/changelog/" target="_blank">
-              <TimelineVertical className="text-ui-fg-subtle mr-2" />
-              {t("app.menus.user.changelog")}
-            </Link>
-          </DropdownMenu.Item>
-          <DropdownMenu.Separator />
           <DropdownMenu.Item onClick={toggleModal}>
             <Keyboard className="text-ui-fg-subtle mr-2" />
             {t("app.menus.user.shortcuts")}
           </DropdownMenu.Item>
-          <ThemeToggle />
           <DropdownMenu.Separator />
           <Logout />
         </DropdownMenu.Content>
@@ -109,7 +91,7 @@ const UserBadge = () => {
       <DropdownMenu.Trigger
         disabled={!user}
         className={clx(
-          "bg-ui-bg-subtle grid w-full cursor-pointer grid-cols-[24px_1fr_15px] items-center gap-2 rounded-md py-1 pl-0.5 pr-2 outline-none",
+          "bg-ui-bg-subtle bg-ui-custom grid w-full cursor-pointer grid-cols-[24px_1fr_15px] items-center gap-2 rounded-md py-1 pl-0.5 pr-2 outline-none",
           "hover:bg-ui-bg-subtle-hover",
           "data-[state=open]:bg-ui-bg-subtle-hover",
           "focus-visible:shadow-borders-focus"
@@ -139,51 +121,6 @@ const UserBadge = () => {
         <EllipsisHorizontal className="text-ui-fg-muted" />
       </DropdownMenu.Trigger>
     </div>
-  )
-}
-
-const ThemeToggle = () => {
-  const { t } = useTranslation()
-  const { theme, setTheme } = useTheme()
-
-  return (
-    <DropdownMenu.SubMenu>
-      <DropdownMenu.SubMenuTrigger className="rounded-md">
-        <CircleHalfSolid className="text-ui-fg-subtle mr-2" />
-        {t("app.menus.user.theme.label")}
-      </DropdownMenu.SubMenuTrigger>
-      <DropdownMenu.SubMenuContent>
-        <DropdownMenu.RadioGroup value={theme}>
-          <DropdownMenu.RadioItem
-            value="system"
-            onClick={(e) => {
-              e.preventDefault()
-              setTheme("system")
-            }}
-          >
-            {t("app.menus.user.theme.system")}
-          </DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem
-            value="light"
-            onClick={(e) => {
-              e.preventDefault()
-              setTheme("light")
-            }}
-          >
-            {t("app.menus.user.theme.light")}
-          </DropdownMenu.RadioItem>
-          <DropdownMenu.RadioItem
-            value="dark"
-            onClick={(e) => {
-              e.preventDefault()
-              setTheme("dark")
-            }}
-          >
-            {t("app.menus.user.theme.dark")}
-          </DropdownMenu.RadioItem>
-        </DropdownMenu.RadioGroup>
-      </DropdownMenu.SubMenuContent>
-    </DropdownMenu.SubMenu>
   )
 }
 

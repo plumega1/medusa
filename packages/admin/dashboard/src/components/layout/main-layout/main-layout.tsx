@@ -40,7 +40,7 @@ export const MainLayout = () => {
 
 const MainSidebar = () => {
   return (
-    <aside className="flex flex-1 flex-col justify-between overflow-y-auto">
+    <aside className="bg-ui-custom flex flex-1 flex-col justify-between overflow-y-auto">
       <div className="flex flex-1 flex-col">
         <div className="bg-ui-bg-subtle sticky top-0">
           <Header />
@@ -105,13 +105,12 @@ const Header = () => {
   }
 
   return (
-    <div className="w-full p-3">
+    <div className="bg-ui-custom w-full p-3">
       <DropdownMenu>
         <DropdownMenu.Trigger
           disabled={!isLoaded}
           className={clx(
-            "bg-ui-bg-subtle transition-fg grid w-full grid-cols-[24px_1fr_15px] items-center gap-x-3 rounded-md p-0.5 pr-2 outline-none",
-            "hover:bg-ui-bg-subtle-hover",
+            "transition-fg grid w-full grid-cols-[24px_1fr_15px] items-center gap-x-3 rounded-md p-0.5 pr-2 outline-none",
             "data-[state=open]:bg-ui-bg-subtle-hover",
             "focus-visible:shadow-borders-focus"
           )}
@@ -119,7 +118,7 @@ const Header = () => {
           {fallback ? (
             <Avatar variant="squared" size="xsmall" fallback={fallback} />
           ) : (
-            <Skeleton className="h-6 w-6 rounded-md" />
+            <Skeleton className="bg-ui-custom h-6 w-6 rounded-md" />
           )}
           <div className="block overflow-hidden text-left">
             {name ? (
@@ -376,7 +375,7 @@ const UtilitySection = () => {
 
 const UserSection = () => {
   return (
-    <div>
+    <div className="bg-ui-custom">
       <div className="px-3">
         <Divider variant="dashed" />
       </div>

@@ -154,7 +154,7 @@ const Cancel = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   return (
     <RadixAlertDialog.Cancel ref={ref} className={clx(className)} {...props} asChild>
-      <Button size="small" variant="secondary">
+      <Button size="small" variant="tertiary">
         {children}
       </Button>
     </RadixAlertDialog.Cancel>

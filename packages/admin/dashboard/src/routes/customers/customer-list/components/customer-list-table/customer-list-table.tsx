@@ -51,7 +51,7 @@ export const CustomerListTable = () => {
       <div className="flex items-center justify-between px-6 py-4">
         <Heading>{t("customers.domain")}</Heading>
         <Link to="/customers/create">
-          <Button size="small" variant="secondary">
+          <Button size="small" variant="primary">
             {t("actions.create")}
           </Button>
         </Link>

@@ -79,7 +79,7 @@ export const CategoryListTable = () => {
               <Link to="organize">{t("categories.organize.action")}</Link>
             </Button>
           )}
-          <Button size="small" variant="secondary" asChild>
+          <Button size="small" variant="primary" asChild>
             <Link to="create">{t("actions.create")}</Link>
           </Button>
         </div>

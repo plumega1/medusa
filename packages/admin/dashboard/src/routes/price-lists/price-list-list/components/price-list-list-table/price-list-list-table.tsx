@@ -49,7 +49,7 @@ export const PriceListListTable = () => {
             {t("priceLists.subtitle")}
           </Text>
         </div>
-        <Button size="small" variant="secondary" asChild>
+        <Button size="small" variant="primary" asChild>
           <Link to="create">{t("actions.create")}</Link>
         </Button>
       </div>

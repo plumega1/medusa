@@ -61,7 +61,7 @@ const Item = React.forwardRef<
         className={clx(
           "shadow-borders-base bg-ui-bg-base transition-fg flex h-[14px] w-[14px] items-center justify-center rounded-full",
           "group-hover:group-enabled:group-data-[state=unchecked]:bg-ui-bg-base-hover",
-          "group-data-[state=checked]:bg-ui-bg-interactive group-data-[state=checked]:shadow-borders-interactive-with-shadow",
+          "group-data-[state=checked]:bg-ui-custom-toggle-fill group-data-[state=checked]:shadow-borders-interactive-with-shadow",
           "group-focus-visible:!shadow-borders-interactive-with-focus",
           "group-disabled:cursor-not-allowed group-disabled:opacity-50"
         )}
@@ -108,7 +108,7 @@ const ChoiceBox = React.forwardRef<
       <div className="flex h-5 w-5 items-center justify-center">
         <div
           className={clx(
-            "shadow-borders-base bg-ui-bg-base group-data-[state=checked]:bg-ui-bg-interactive group-data-[state=checked]:shadow-borders-interactive-with-shadow transition-fg flex h-3.5 w-3.5 items-center justify-center rounded-full",
+            "shadow-borders-base bg-ui-bg-base group-data-[state=checked]:bg-ui-custom-toggle-fill group-data-[state=checked]:shadow-borders-interactive-with-shadow transition-fg flex h-3.5 w-3.5 items-center justify-center rounded-full",
             "group-hover:group-enabled:group-data-[state=unchecked]:bg-ui-bg-base-hover"
           )}
         >

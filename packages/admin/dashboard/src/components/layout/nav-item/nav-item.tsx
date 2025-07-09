@@ -31,8 +31,7 @@ export type INavItem = {
 
 const BASE_NAV_LINK_CLASSES =
   "text-ui-fg-subtle transition-fg hover:bg-ui-bg-subtle-hover rounded-md flex items-center gap-x-2 py-0.5 pl-0.5 pr-2 outline-none [&>svg]:text-ui-fg-subtle"
-const ACTIVE_NAV_LINK_CLASSES =
-  "bg-ui-button-inverted text-ui-fg-base hover:bg-ui-button-inverted-hover"
+const ACTIVE_NAV_LINK_CLASSES = "bg-ui-custom-selection text-ui-fg-base"
 const NESTED_NAV_LINK_CLASSES = "pl-[34px] pr-2 py-1 w-full text-ui-fg-muted"
 const SETTING_NAV_LINK_CLASSES = "pl-2 py-1"
 

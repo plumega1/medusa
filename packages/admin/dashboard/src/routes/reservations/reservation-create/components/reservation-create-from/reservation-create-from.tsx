@@ -291,7 +291,7 @@ export const ReservationCreateForm = (props: { inventoryItemId?: string }) => {
         <RouteFocusModal.Footer>
           <div className="flex items-center justify-end gap-x-2">
             <RouteFocusModal.Close asChild>
-              <Button variant="secondary" size="small">
+              <Button variant="tertiary" size="small">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>

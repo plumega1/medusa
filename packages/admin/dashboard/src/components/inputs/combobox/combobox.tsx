@@ -232,7 +232,7 @@ const ComboboxImpl = <T extends Value = string>(
         className={clx(
           "relative flex cursor-pointer items-center gap-x-2 overflow-hidden",
           "h-8 w-full rounded-md",
-          "bg-ui-bg-field transition-fg shadow-borders-base",
+          "bg-ui-custom transition-fg shadow-borders-base",
           "has-[input:focus]:shadow-borders-interactive-with-active",
           "has-[:invalid]:shadow-borders-error has-[[aria-invalid=true]]:shadow-borders-error",
           "has-[:disabled]:bg-ui-bg-disabled has-[:disabled]:text-ui-fg-disabled has-[:disabled]:cursor-not-allowed",
@@ -294,7 +294,6 @@ const ComboboxImpl = <T extends Value = string>(
             onFocus={() => setOpen(true)}
             className={clx(
               "txt-compact-small text-ui-fg-base !placeholder:text-ui-fg-muted transition-fg size-full cursor-pointer bg-transparent pl-2 pr-8 outline-none focus:cursor-text",
-              "hover:bg-ui-bg-field-hover",
               {
                 "opacity-0": hideInput,
                 "pl-2": !showTag,
@@ -337,7 +336,7 @@ const ComboboxImpl = <T extends Value = string>(
         ref={listboxRef}
         role="listbox"
         className={clx(
-          "shadow-elevation-flyout bg-ui-bg-base z-50 rounded-[8px] p-1",
+          "shadow-elevation-flyout bg-ui-custom z-50 rounded-[8px] p-1",
           "max-h-[200px] overflow-y-auto",
           "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",

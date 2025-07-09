@@ -50,7 +50,7 @@ export const ShippingProfileListTable = () => {
           </Text>
         </div>
         <div>
-          <Button size="small" variant="secondary" asChild>
+          <Button size="small" variant="primary" asChild>
             <Link to="create">{t("actions.create")}</Link>
           </Button>
         </div>

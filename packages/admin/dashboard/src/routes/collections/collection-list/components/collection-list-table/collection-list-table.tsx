@@ -55,7 +55,7 @@ export const CollectionListTable = () => {
           </Text>
         </div>
         <Link to="/collections/create">
-          <Button size="small" variant="secondary">
+          <Button size="small" variant="primary">
             {t("actions.create")}
           </Button>
         </Link>

@@ -162,6 +162,7 @@ const Control = forwardRef<
       }
       aria-invalid={!!error}
       aria-labelledby={formLabelId}
+      className="bg-ui-custom hover:bg-ui-custom"
       {...props}
     />
   )

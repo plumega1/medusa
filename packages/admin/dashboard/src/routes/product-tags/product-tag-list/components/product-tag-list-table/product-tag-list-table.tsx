@@ -56,7 +56,7 @@ export const ProductTagListTable = () => {
     <Container className="divide-y px-0 py-0">
       <div className="flex items-center justify-between px-6 py-4">
         <Heading>{t("productTags.domain")}</Heading>
-        <Button variant="secondary" size="small" asChild>
+        <Button variant="primary" size="small" asChild>
           <Link to="create">{t("actions.create")}</Link>
         </Button>
       </div>

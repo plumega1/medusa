@@ -79,19 +79,19 @@ export const NoRecords = ({
   return (
     <div
       className={clx(
-        "flex h-[150px] w-full flex-col items-center justify-center gap-y-4",
+        "flex w-full flex-col items-center justify-center gap-y-4 p-24",
         className
       )}
     >
       <div className="flex flex-col items-center gap-y-3">
         {icon}
 
-        <div className="flex flex-col items-center gap-y-1">
-          <Text size="small" leading="compact" weight="plus">
+        <div className="mt-6 flex flex-col items-center gap-y-1 font-black">
+          <Text size="small" leading="compact" weight="bold">
             {title ?? t("general.noRecordsTitle")}
           </Text>
 
-          <Text size="small" className="text-ui-fg-muted">
+          <Text size="small" className="text-ui-fg-muted mt-2">
             {message ?? t("general.noRecordsMessage")}
           </Text>
         </div>

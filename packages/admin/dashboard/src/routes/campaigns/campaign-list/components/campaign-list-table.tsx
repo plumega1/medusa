@@ -52,7 +52,7 @@ export const CampaignListTable = () => {
       <div className="flex items-center justify-between px-6 py-4">
         <Heading level="h2">{t("campaigns.domain")}</Heading>
         <Link to="/campaigns/create">
-          <Button size="small" variant="secondary">
+          <Button size="small" variant="primary">
             {t("actions.create")}
           </Button>
         </Link>

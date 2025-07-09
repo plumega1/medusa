@@ -65,7 +65,7 @@ export const ApiKeyManagementListTable = ({
           </Text>
         </div>
         <Link to="create">
-          <Button variant="secondary" size="small">
+          <Button variant="primary" size="small">
             {t("actions.create")}
           </Button>
         </Link>

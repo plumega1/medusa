@@ -73,7 +73,7 @@ export const ProductTagEditForm = ({ productTag }: ProductTagEditFormProps) => {
         <RouteDrawer.Footer>
           <div className="flex items-center justify-end gap-x-2">
             <RouteDrawer.Close asChild>
-              <Button variant="secondary" size="small" type="button">
+              <Button variant="tertiary" size="small" type="button">
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>

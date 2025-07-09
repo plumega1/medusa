@@ -274,7 +274,7 @@ const InnerForm = <TRes,>({
             <RouteDrawer.Close asChild>
               <Button
                 size="small"
-                variant="secondary"
+                variant="tertiary"
                 type="button"
                 disabled={isMutating}
               >

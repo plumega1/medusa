@@ -1,6 +1,13 @@
 export const colors = {
   dark: {
     "--button-danger-pressed": "rgba(225, 29, 72, 1)",
+    "--custom-bg": "#ffffff",
+    "--custom-text-color": "#000000",
+    "--custom-selection": "#DCEDE1",
+    "--custom-stroke": "#059688",
+    "--custom-primary-button": "#FFBE3C",
+    "--custom-toggle-fill": "#007171",
+    "--custom-border": "#CCCCCC",
     "--bg-base-pressed": "rgba(63, 63, 70, 1)",
     "--bg-component-hover": "rgba(255, 255, 255, 0.1)",
     "--border-interactive": "rgba(96, 165, 250, 1)",
@@ -92,6 +99,13 @@ export const colors = {
     "--alpha-250": "rgba(255, 255, 255, 0.1)",
   },
   light: {
+    "--custom-bg": "#ffffff",
+    "--custom-text-color": "#000000",
+    "--custom-selection": "#DCEDE1",
+    "--custom-stroke": "#059688",
+    "--custom-primary-button": "#FFBE3C",
+    "--custom-toggle-fill": "#007171",
+    "--custom-border": "#CCCCCC",
     "--tag-neutral-border": "rgba(228, 228, 231, 1)",
     "--tag-neutral-icon": "rgba(161, 161, 170, 1)",
     "--bg-switch-off-hover": "rgba(212, 212, 216, 1)",

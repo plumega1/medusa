@@ -129,7 +129,7 @@ export const PricingEdit = ({
         <RouteFocusModal.Footer>
           <div className="flex w-full items-center justify-end gap-x-2">
             <RouteFocusModal.Close asChild>
-              <Button variant="secondary" size="small">
+              <Button variant="tertiary" size="small">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>

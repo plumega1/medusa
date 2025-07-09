@@ -329,11 +329,12 @@ export const ProductCreateForm = ({
         <RouteFocusModal.Footer>
           <div className="flex items-center justify-end gap-x-2">
             <RouteFocusModal.Close asChild>
-              <Button variant="secondary" size="small">
+              <Button variant="tertiary" size="small">
                 {t("actions.cancel")}
               </Button>
             </RouteFocusModal.Close>
             <Button
+              variant="secondary"
               data-name={SAVE_DRAFT_BUTTON}
               size="small"
               type="submit"

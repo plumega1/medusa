@@ -53,7 +53,7 @@ export const EditRulesForm = ({
         <RouteDrawer.Footer>
           <div className="flex items-center justify-end gap-x-2">
             <RouteDrawer.Close asChild>
-              <Button size="small" variant="secondary" disabled={isSubmitting}>
+              <Button size="small" variant="tertiary" disabled={isSubmitting}>
                 {t("actions.cancel")}
               </Button>
             </RouteDrawer.Close>

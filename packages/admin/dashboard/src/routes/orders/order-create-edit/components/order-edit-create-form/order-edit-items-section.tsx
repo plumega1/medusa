@@ -99,7 +99,7 @@ export const OrderEditItemsSection = ({
                 <div className="flex w-full items-center justify-end gap-x-4">
                   <div className="flex items-center justify-end gap-x-2">
                     <RouteFocusModal.Close asChild>
-                      <Button type="button" variant="secondary" size="small">
+                      <Button type="button" variant="tertiary" size="small">
                         {t("actions.cancel")}
                       </Button>
                     </RouteFocusModal.Close>

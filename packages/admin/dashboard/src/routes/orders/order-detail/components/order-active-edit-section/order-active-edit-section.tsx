@@ -184,11 +184,7 @@ export const OrderActiveEditSection = ({
                 {t("actions.forceConfirm")}
               </Button>
             )}
-            <Button
-              size="small"
-              variant="secondary"
-              onClick={onCancelOrderEdit}
-            >
+            <Button size="small" variant="tertiary" onClick={onCancelOrderEdit}>
               {t("actions.cancel")}
             </Button>
           </div>

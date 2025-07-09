@@ -409,7 +409,7 @@ const DataTableAction = ({
     size: "small" as const,
     disabled: disabled ?? false,
     type: "button" as const,
-    variant: "secondary" as const,
+    variant: "primary" as const,
   }
 
   if ("to" in props) {

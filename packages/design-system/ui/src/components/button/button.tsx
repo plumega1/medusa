@@ -14,12 +14,18 @@ const buttonVariants = cva({
   variants: {
     variant: {
       primary: clx(
-        "text-ui-contrast-fg-primary bg-ui-button-inverted after:button-inverted-gradient",
-        "hover:bg-ui-button-inverted-hover hover:after:button-inverted-hover-gradient",
+        "text-ui-custom-text bg-ui-custom-primary-button after:button-inverted-gradient border border-ui-custom-primary-button",
+        "hover:bg-ui-custom hover:after:button-inverted-hover-gradient",
         "active:bg-ui-button-inverted-pressed active:after:button-inverted-pressed-gradient",
         "focus-visible:!shadow-buttons-inverted-focus"
       ),
       secondary: clx(
+        "text-ui-fg-base bg-ui-button-neutral border border-ui-custom-stroke after:button-neutral-gradient",
+        "hover:bg-ui-button-neutral-hover hover:after:button-neutral-hover-gradient",
+        "active:bg-ui-button-neutral-pressed active:after:button-neutral-pressed-gradient",
+        "focus-visible:shadow-buttons-neutral-focus"
+      ),
+      tertiary: clx(
         "shadow-buttons-neutral text-ui-fg-base bg-ui-button-neutral after:button-neutral-gradient",
         "hover:bg-ui-button-neutral-hover hover:after:button-neutral-hover-gradient",
         "active:bg-ui-button-neutral-pressed active:after:button-neutral-pressed-gradient",

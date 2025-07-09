@@ -57,7 +57,7 @@ export const PromotionListTable = () => {
       <div className="flex items-center justify-between px-6 py-4">
         <Heading level="h2">{t("promotions.domain")}</Heading>
 
-        <Button size="small" variant="secondary" asChild>
+        <Button size="small" variant="primary" asChild>
           <Link to="create">{t("actions.create")}</Link>
         </Button>
       </div>

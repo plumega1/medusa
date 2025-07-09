@@ -17,7 +17,7 @@ export const LinkButton = ({
         "transition-fg txt-compact-small-plus rounded-[4px] outline-none",
         "focus-visible:shadow-borders-focus",
         {
-          "text-ui-fg-interactive hover:text-ui-fg-interactive-hover":
+          "text-ui-custom-stroke hover:text-ui-fg-interactive-hover":
             variant === "interactive",
           "text-ui-fg-base hover:text-ui-fg-subtle": variant === "primary",
         },

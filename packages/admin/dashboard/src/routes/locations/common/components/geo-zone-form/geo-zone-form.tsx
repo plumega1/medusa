@@ -257,7 +257,7 @@ const AreaStackedModal = <TForm extends UseFormReturn<any>>({
       <StackedFocusModal.Footer>
         <div className="flex items-center justify-end gap-x-2">
           <StackedFocusModal.Close type="button" asChild>
-            <Button variant="secondary" size="small">
+            <Button variant="tertiary" size="small">
               {t("actions.cancel")}
             </Button>
           </StackedFocusModal.Close>

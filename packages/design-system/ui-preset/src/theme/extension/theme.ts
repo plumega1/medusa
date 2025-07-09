@@ -271,6 +271,27 @@ export const theme = {
             }
           }
         },
+         "custom": {
+            "DEFAULT": "var(--custom-bg)",
+            "text":{
+              "DEFAULT": "var(--custom-text-color)"
+            },
+            "selection": {
+              "DEFAULT": "var(--custom-selection)"
+            },
+            "stroke": {
+              "DEFAULT": "var(--custom-stroke)"
+            },
+            "primary-button": {
+              "DEFAULT": "var(--custom-primary-button)"
+            },
+            "toggle-fill": {
+              "DEFAULT": "var(--custom-toggle-fill)"
+            },
+            "border": {
+              "DEFAULT": "var(--custom-border)"
+            }
+          },
         "fg": {
           "on": {
             "color": {

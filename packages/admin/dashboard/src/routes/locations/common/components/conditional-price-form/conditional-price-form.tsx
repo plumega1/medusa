@@ -208,7 +208,7 @@ export const ConditionalPriceForm = ({
           <StackedFocusModal.Footer>
             <div className="flex items-center justify-end gap-2">
               <StackedFocusModal.Close asChild>
-                <Button variant="secondary" size="small" type="button">
+                <Button variant="tertiary" size="small" type="button">
                   {t("actions.cancel")}
                 </Button>
               </StackedFocusModal.Close>
