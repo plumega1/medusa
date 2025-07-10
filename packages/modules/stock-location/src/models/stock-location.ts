@@ -3,6 +3,7 @@ import StockLocationAddress from "./stock-location-address"
 
 const StockLocation = model.define("StockLocation", {
   id: model.id({ prefix: "sloc" }).primaryKey(),
+  store_id: model.text().searchable(),
   name: model.text().searchable(),
   metadata: model.json().nullable(),
   address: model

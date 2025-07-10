@@ -11,6 +11,7 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<AdminCreateStockLocationFulfillmentSetType>,
   res: MedusaResponse<HttpTypes.AdminStockLocationResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   await createLocationFulfillmentSetWorkflow(req.scope).run({
     input: {
       location_id: req.params.id,
@@ -23,6 +24,7 @@ export const POST = async (
 
   const stockLocation = await refetchStockLocation(
     req.params.id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )

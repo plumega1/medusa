@@ -1,5 +1,6 @@
 export const defaultAdminOrderFields = [
   "id",
+  "store_id",
   "display_id",
   "status",
   "version",

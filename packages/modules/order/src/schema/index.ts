@@ -212,6 +212,7 @@ type OrderLineItem {
 
 type OrderItem {
   id: ID!
+  store_id: String!
   item_id: String!
   item: OrderLineItem!
   quantity: Int!

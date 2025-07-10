@@ -41,6 +41,7 @@ export interface AdminCreateStockLocation {
    * The name of the stock location.
    */
   name: string
+  store_id?: string
   /**
    * The ID of the address to associate with the stock location.
    * If you provide an `address`, you don't need to provide this property.

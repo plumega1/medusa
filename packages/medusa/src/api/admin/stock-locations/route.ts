@@ -16,12 +16,14 @@ export const POST = async (
   req: AuthenticatedMedusaRequest<HttpTypes.AdminCreateStockLocation>,
   res: MedusaResponse<HttpTypes.AdminStockLocationResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const { result } = await createStockLocationsWorkflow(req.scope).run({
-    input: { locations: [req.validatedBody] },
+    input: { locations: [{store_id: store_id, ...req.validatedBody}]},
   })
 
   const stockLocation = await refetchStockLocation(
     result[0].id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )
@@ -34,12 +36,13 @@ export const GET = async (
   res: MedusaResponse<HttpTypes.AdminStockLocationListResponse>
 ) => {
   const remoteQuery = req.scope.resolve(ContainerRegistrationKeys.REMOTE_QUERY)
+  const store_id = req.auth_context.store_id
 
   const { rows: stock_locations, metadata } = await remoteQuery(
     remoteQueryObjectFromString({
       entryPoint: "stock_locations",
       variables: {
-        filters: req.filterableFields,
+        filters: {store_id: store_id, ...req.filterableFields},
         ...req.queryConfig.pagination,
       },
       fields: req.queryConfig.fields,

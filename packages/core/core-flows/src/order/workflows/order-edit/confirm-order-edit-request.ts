@@ -84,6 +84,7 @@ export type ConfirmOrderEditRequestWorkflowInput = {
    * The ID of the order to confirm the edit for.
    */
   order_id: string
+  store_id?: string
   /**
    * The ID of the user confirming the edit.
    */
@@ -192,8 +193,8 @@ export const confirmOrderEditRequestWorkflow = createWorkflow(
     }).config({ name: "order-items-query" })
 
     const { variants, items, toRemoveReservationLineItemIds } = transform(
-      { orderItems, previousOrderItems: order.items, orderPreview },
-      ({ orderItems, previousOrderItems, orderPreview }) => {
+      { orderItems, previousOrderItems: order.items, orderPreview, storeId: input.store_id },
+      ({ orderItems, previousOrderItems, orderPreview, storeId }) => {
         const allItems: any[] = []
         const allVariants: any[] = []
 
@@ -249,6 +250,7 @@ export const confirmOrderEditRequestWorkflow = createWorkflow(
             variant_id: ordItem.variant_id,
             quantity: reservationQuantity,
             unit_price: unitPrice,
+            store_id: storeId,
             compare_at_unit_price: compareAtUnitPrice,
           })
           allVariants.push(ordItem.variant)
@@ -271,6 +273,7 @@ export const confirmOrderEditRequestWorkflow = createWorkflow(
           sales_channel_id: (orderItems as any).sales_channel_id,
           variants,
           items,
+          store_id: input.store_id,
         },
       },
       prepareConfirmInventoryInput

@@ -19,6 +19,7 @@ interface ConfirmInventoryPreparationInput {
     id?: string
     variant_id?: string | null
     quantity: BigNumberInput
+    store_id?: string
   }[]
   variants: {
     id: string
@@ -27,6 +28,7 @@ interface ConfirmInventoryPreparationInput {
   }[]
   location_ids: string[]
   stockAvailability: Map<string, Map<string, BigNumberInput>>
+  store_id?: string
 }
 
 interface ConfirmInventoryItem {
@@ -36,6 +38,7 @@ interface ConfirmInventoryItem {
   allow_backorder: boolean
   quantity: BigNumberInput
   location_ids: string[]
+  store_id?: string
 }
 
 /**
@@ -50,7 +53,7 @@ interface ConfirmInventoryItem {
  * A list of inventory items to confirm. Only inventory items for variants with managed inventory are included.
  */
 export const prepareConfirmInventoryInput = (data: {
-  input: ConfirmVariantInventoryWorkflowInputDTO
+  input: ConfirmVariantInventoryWorkflowInputDTO & { store_id?: string }
 }) => {
   const productVariantInventoryItems = new Map<string, any>()
   const stockLocationIds = new Set<string>()
@@ -60,6 +63,7 @@ export const prepareConfirmInventoryInput = (data: {
   let hasManagedInventory = false
 
   const salesChannelId = data.input.sales_channel_id
+  const storeId = data.input.store_id
 
   for (const updateItem of data.input.itemsToUpdate ?? []) {
     const updateItem_ = "data" in updateItem ? updateItem.data : updateItem
@@ -171,6 +175,7 @@ export const prepareConfirmInventoryInput = (data: {
     stockAvailability: mapLocationAvailability,
     items: data.input.items,
     variants: Array.from(allVariants.values()),
+    store_id: storeId,
   })
 
   return { items }
@@ -182,6 +187,7 @@ const formatInventoryInput = ({
   items,
   stockAvailability,
   variants,
+  store_id,
 }: ConfirmInventoryPreparationInput) => {
   if (!product_variant_inventory_items.length) {
     return []
@@ -231,6 +237,7 @@ const formatInventoryInput = ({
         location_ids: locationsWithAvailability.length
           ? locationsWithAvailability
           : location_ids,
+        store_id: store_id,
       })
     })
   })

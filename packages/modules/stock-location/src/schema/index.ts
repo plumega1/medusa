@@ -17,6 +17,7 @@ type StockLocationAddress {
 
 type StockLocation {
   id: ID!
+  store_id: String!
   name: String!
   metadata: JSON
   address_id: ID!

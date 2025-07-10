@@ -1,5 +1,6 @@
 export const defaultAdminStockLocationFields = [
   "id",
+  "store_id",
   "name",
   "metadata",
   "created_at",

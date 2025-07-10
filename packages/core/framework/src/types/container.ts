@@ -46,6 +46,7 @@ declare module "@medusajs/types" {
     [ContainerRegistrationKeys.LINK]: Link
     [ContainerRegistrationKeys.CONFIG_MODULE]: ConfigModule
     [ContainerRegistrationKeys.PG_CONNECTION]: Knex<any>
+    [ContainerRegistrationKeys.MYSQL_CONNECTION]: Knex<any>
     [ContainerRegistrationKeys.REMOTE_QUERY]: RemoteQueryFunction
     [ContainerRegistrationKeys.QUERY]: Omit<RemoteQueryFunction, symbol>
     [ContainerRegistrationKeys.LOGGER]: Logger

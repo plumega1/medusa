@@ -20,6 +20,7 @@ export const POST = async (
   res: MedusaResponse<HttpTypes.AdminStockLocationResponse>
 ) => {
   const { id } = req.params
+  const store_id = req.auth_context.store_id
   await updateStockLocationsWorkflow(req.scope).run({
     input: {
       selector: { id: req.params.id },
@@ -29,6 +30,7 @@ export const POST = async (
 
   const stockLocation = await refetchStockLocation(
     id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )
@@ -43,9 +45,11 @@ export const GET = async (
   res: MedusaResponse<HttpTypes.AdminStockLocationResponse>
 ) => {
   const { id } = req.params
+  const store_id = req.auth_context.store_id
 
   const stockLocation = await refetchStockLocation(
     id,
+    store_id,
     req.scope,
     req.queryConfig.fields
   )

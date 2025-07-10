@@ -379,6 +379,7 @@ export type CreateStockLocationInput = {
    * The name of the stock location.
    */
   name: string
+  store_id?: string
 
   /**
    * The associated address's ID.

@@ -1,5 +1,6 @@
 export * from "./build-query"
 export * from "./create-pg-connection"
+export * from "./create-mysql-connection"
 export * from "./decorators"
 export * from "./define-link"
 export * from "./definition"

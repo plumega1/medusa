@@ -12,6 +12,7 @@ import { createStockLocations } from "../steps"
  * The data to create the stock locations.
  */
 export interface CreateStockLocationsWorkflowInput {
+  store_id?: string
   /**
    * The stock locations to create.
    */

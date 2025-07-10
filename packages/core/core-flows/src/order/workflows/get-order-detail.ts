@@ -20,6 +20,7 @@ export type GetOrderDetailWorkflowInput = {
    * Additional filters to apply on the retrieved order.
    */
   filters?: { 
+    store_id?: string
     /**
      * Whether to retrieve a draft order.
      */
@@ -29,6 +30,7 @@ export type GetOrderDetailWorkflowInput = {
      */
     customer_id?: string
   }
+  store_id?: string
   /**
    * The fields and relations to retrieve in the order. These fields
    * are passed to [Query](https://docs.medusajs.com/learn/fundamentals/module-links/query),
@@ -85,7 +87,7 @@ export const getOrderDetailWorkflow = createWorkflow(
     })
 
     const variables = transform({ input }, ({ input }) => {
-      return { ...input.filters, id: input.order_id, version: input.version }
+      return { ...input.filters, id: input.order_id, store_id: input.store_id, version: input.version }
     })
 
     const order: OrderDTO = useRemoteQueryStep({

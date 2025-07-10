@@ -10,10 +10,12 @@ export const POST = async (
   res: MedusaResponse<HttpTypes.AdminOrderEditPreviewResponse>
 ) => {
   const { id } = req.params
+  const store_id = req.auth_context.store_id
 
   const { result } = await confirmOrderEditRequestWorkflow(req.scope).run({
     input: {
       order_id: id,
+      store_id: store_id,
       confirmed_by: req.auth_context.actor_id,
     },
   })

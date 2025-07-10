@@ -9,9 +9,11 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<HttpTypes.AdminOrderFilters>,
   res: MedusaResponse<HttpTypes.AdminOrderListResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const variables = {
     filters: {
       ...req.filterableFields,
+      store_id: store_id,
       is_draft_order: false,
     },
     ...req.queryConfig.pagination,

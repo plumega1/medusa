@@ -1,6 +1,7 @@
 import { BigNumberInput } from "../../totals/big-number"
 
 export interface CreateInventoryLevelInput {
+  store_id?: string
   /**
    * The ID of the associated inventory item.
    */

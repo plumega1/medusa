@@ -1,4 +1,5 @@
 import { container, MedusaAppLoader } from "@medusajs/framework"
+import { MikroORM } from "@mikro-orm/core"
 import { configLoader } from "@medusajs/framework/config"
 import { pgConnectionLoader } from "@medusajs/framework/database"
 import { featureFlagsLoader } from "@medusajs/framework/feature-flags"
@@ -93,11 +94,41 @@ async function loadEntrypoints(
    * The scope and the ip address must be fetched before we execute any other
    * middleware
    */
-  expressApp.use((req: Request, res: Response, next: NextFunction) => {
-    req.scope = container.createScope() as MedusaContainer
-    req.requestId = (req.headers["x-request-id"] as string) ?? v4()
-    next()
-  })
+expressApp.use(async (req: Request, res: Response, next: NextFunction) => {
+  req.scope = container.createScope() as MedusaContainer
+  req.requestId = (req.headers["x-request-id"] as string) ?? v4()
+  const tenantId = req.headers["x-store-id"] as string ?? "default_tenant"
+
+  try {
+    if (!tenantId) {
+      throw new Error("Missing tenant_id in token")
+    }
+
+    const schema = `tenant_${tenantId}`
+
+    // Check if ORM is available, if not skip tenant setup for now
+    if (!container.hasRegistration("orm")) {
+      console.warn("[tenant-middleware] ORM not yet available, skipping tenant setup")
+      return next()
+    }
+
+    const orm = container.resolve("orm") as MikroORM
+    const em = orm.em.fork()
+
+    await em.getConnection().execute(`SET search_path TO ${schema}, public`)
+
+    req.scope.register({
+      manager: asValue(em),
+    })
+
+    ;(req as any).tenantSchema = schema
+  } catch (err) {
+    console.error("[tenant-middleware] Failed to inject tenant EM", err)
+    return res.status(400).json({ error: "Invalid or missing tenant" })
+  }
+
+  return next()
+})
 
   // Add additional information to context of request
   expressApp.use((req: Request, res: Response, next: NextFunction) => {

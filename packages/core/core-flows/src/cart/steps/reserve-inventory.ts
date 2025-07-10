@@ -11,6 +11,7 @@ export interface ReserveVariantInventoryStepInput {
      * The ID for the line item.
      */
     id?: string
+    store_id?: string
 
     /**
      * The ID of the inventory item to reserve quantities from.
@@ -82,8 +83,11 @@ export const reserveInventoryStep = createStep(
         quantity: MathBN.mult(item.required_quantity, item.quantity),
         allow_backorder: item.allow_backorder,
         location_id: item.location_ids[0],
+        store_id: item.store_id,
       }
     })
+
+    console.log("Reseving Items", items)
 
     const lockingKeys = Array.from(new Set(inventoryItemIds))
 

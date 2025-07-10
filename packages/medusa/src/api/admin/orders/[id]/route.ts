@@ -17,11 +17,15 @@ export const GET = async (
   req: AuthenticatedMedusaRequest<AdminGetOrdersOrderParamsType>,
   res: MedusaResponse<HttpTypes.AdminOrderResponse>
 ) => {
+  const store_id = req.auth_context.store_id
   const workflow = getOrderDetailWorkflow(req.scope)
+  console.log("Code is here 1.1", store_id)
   const { result } = await workflow.run({
     input: {
       fields: req.queryConfig.fields,
       order_id: req.params.id,
+      store_id: store_id,
+      filters: {store_id: store_id},
       version: req.validatedQuery.version as number,
     },
   })
@@ -34,6 +38,7 @@ export const POST = async (
   res: MedusaResponse<HttpTypes.AdminOrderResponse>
 ) => {
   const query = req.scope.resolve(ContainerRegistrationKeys.QUERY)
+  const store_id = req.auth_context.store_id
 
   await updateOrderWorkflow(req.scope).run({
     input: {
@@ -45,7 +50,7 @@ export const POST = async (
 
   const result = await query.graph({
     entity: "order",
-    filters: { id: req.params.id },
+    filters: { id: req.params.id, store_id: store_id },
     fields: req.queryConfig.fields,
   })
 

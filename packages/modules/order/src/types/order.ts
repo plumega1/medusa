@@ -1,6 +1,7 @@
 import { OrderStatus } from "@medusajs/framework/utils"
 
 export interface CreateOrderDTO {
+  store_id?: string
   region_id?: string
   customer_id?: string
   sales_channel_id?: string

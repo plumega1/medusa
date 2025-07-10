@@ -7356,6 +7356,7 @@ __metadata:
     "@mikro-orm/core": 6.4.3
     "@mikro-orm/knex": 6.4.3
     "@mikro-orm/migrations": 6.4.3
+    "@mikro-orm/mysql": ^6.4.16
     "@mikro-orm/postgresql": 6.4.3
     "@swc/core": ^1.7.28
     "@swc/jest": ^0.2.36
@@ -7370,6 +7371,7 @@ __metadata:
     graphql: ^16.9.0
     jest: ^29.7.0
     jsonwebtoken: ^9.0.2
+    mysql2: ^3.14.1
     pg: ^8.13.0
     pg-connection-string: ^2.7.0
     pg-god: ^1.0.12
@@ -7510,6 +7512,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mikro-orm/knex@npm:6.4.16":
+  version: 6.4.16
+  resolution: "@mikro-orm/knex@npm:6.4.16"
+  dependencies:
+    fs-extra: 11.3.0
+    knex: 3.1.0
+    sqlstring: 2.3.3
+  peerDependencies:
+    "@mikro-orm/core": ^6.0.0
+    better-sqlite3: "*"
+    libsql: "*"
+    mariadb: "*"
+  peerDependenciesMeta:
+    better-sqlite3:
+      optional: true
+    libsql:
+      optional: true
+    mariadb:
+      optional: true
+  checksum: b0584fe3bd79b131512712ec9e31a1b76e272dcff519d5607daebfd5b3dd856116d9aae836c86baa006abc58e0331926aa3bd4ef4bba1a7ced4781d8c6fd3d21
+  languageName: node
+  linkType: hard
+
 "@mikro-orm/knex@npm:6.4.3":
   version: 6.4.3
   resolution: "@mikro-orm/knex@npm:6.4.3"
@@ -7543,6 +7568,18 @@ __metadata:
   peerDependencies:
     "@mikro-orm/core": ^6.0.0
   checksum: 04e7e2405a3d0d94213f2bf40c34988e190f8f0df5ff4565ef23c750680b198f293247418ee60c0605edfcbca119177f2e87dc01d3e6abfc15ec7c4dc976324a
+  languageName: node
+  linkType: hard
+
+"@mikro-orm/mysql@npm:^6.4.16":
+  version: 6.4.16
+  resolution: "@mikro-orm/mysql@npm:6.4.16"
+  dependencies:
+    "@mikro-orm/knex": 6.4.16
+    mysql2: 3.14.1
+  peerDependencies:
+    "@mikro-orm/core": ^6.0.0
+  checksum: b7a4214c5817de10a3b5ef46616feae057eac4c4bd1b8e9f59b8c3637b9a3ade253f0c614d2ae659e30c911618122f2d7c23bf931ff9b7db4ab829cf5e22ea48
   languageName: node
   linkType: hard
 
@@ -16970,6 +17007,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"aws-ssl-profiles@npm:^1.1.1":
+  version: 1.1.2
+  resolution: "aws-ssl-profiles@npm:1.1.2"
+  checksum: e5f59a4146fe3b88ad2a84f814886c788557b80b744c8cbcb1cbf8cf5ba19cc006a7a12e88819adc614ecda9233993f8f1d1f3b612cbc2f297196df9e8f4f66e
+  languageName: node
+  linkType: hard
+
 "aws4@npm:^1.8.0":
   version: 1.13.2
   resolution: "aws4@npm:1.13.2"
@@ -22339,6 +22383,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fs-extra@npm:11.3.0":
+  version: 11.3.0
+  resolution: "fs-extra@npm:11.3.0"
+  dependencies:
+    graceful-fs: ^4.2.0
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: 5f95e996186ff45463059feb115a22fb048bdaf7e487ecee8a8646c78ed8fdca63630e3077d4c16ce677051f5e60d3355a06f3cd61f3ca43f48cc58822a44d0a
+  languageName: node
+  linkType: hard
+
 "fs-extra@npm:8.1.0, fs-extra@npm:^8.0.1, fs-extra@npm:^8.1, fs-extra@npm:^8.1.0":
   version: 8.1.0
   resolution: "fs-extra@npm:8.1.0"
@@ -22458,6 +22513,15 @@ __metadata:
   version: 1.2.3
   resolution: "functions-have-names@npm:1.2.3"
   checksum: 33e77fd29bddc2d9bb78ab3eb854c165909201f88c75faa8272e35899e2d35a8a642a15e7420ef945e1f64a9670d6aa3ec744106b2aa42be68ca5114025954ca
+  languageName: node
+  linkType: hard
+
+"generate-function@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "generate-function@npm:2.3.1"
+  dependencies:
+    is-property: ^1.0.2
+  checksum: 4645cf1da90375e46a6f1dc51abc9933e5eafa4cd1a44c2f7e3909a30a4e9a1a08c14cd7d5b32da039da2dba2a085e1ed4597b580c196c3245b2d35d8bc0de5d
   languageName: node
   linkType: hard
 
@@ -23335,7 +23399,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2":
+"iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2, iconv-lite@npm:^0.6.3":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
   dependencies:
@@ -24135,6 +24199,13 @@ __metadata:
   version: 1.0.1
   resolution: "is-potential-custom-element-name@npm:1.0.1"
   checksum: b73e2f22bc863b0939941d369486d308b43d7aef1f9439705e3582bfccaa4516406865e32c968a35f97a99396dac84e2624e67b0a16b0a15086a785e16ce7db9
+  languageName: node
+  linkType: hard
+
+"is-property@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "is-property@npm:1.0.2"
+  checksum: 33ab65a136e4ba3f74d4f7d9d2a013f1bd207082e11cedb160698e8d5394644e873c39668d112a402175ccbc58a087cef87198ed46829dbddb479115a0257283
   languageName: node
   linkType: hard
 
@@ -25995,6 +26066,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"long@npm:^5.2.1":
+  version: 5.3.2
+  resolution: "long@npm:5.3.2"
+  checksum: 7130fe1cbce2dca06734b35b70d380ca3f70271c7f8852c922a7c62c86c4e35f0c39290565eca7133c625908d40e126ac57c02b1b1a4636b9457d77e1e60b981
+  languageName: node
+  linkType: hard
+
 "loose-envify@npm:^1.0.0, loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
@@ -26077,6 +26155,20 @@ __metadata:
   dependencies:
     yallist: ^4.0.0
   checksum: cb53e582785c48187d7a188d3379c181b5ca2a9c78d2bce3e7dee36f32761d1c42983da3fe12b55cb74e1779fa94cdc2e5367c028a9b35317184ede0c07a30a9
+  languageName: node
+  linkType: hard
+
+"lru-cache@npm:^7.14.1":
+  version: 7.18.3
+  resolution: "lru-cache@npm:7.18.3"
+  checksum: b3a452b491433db885beed95041eb104c157ef7794b9c9b4d647be503be91769d11206bb573849a16b4cc0d03cbd15ffd22df7960997788b74c1d399ac7a4fed
+  languageName: node
+  linkType: hard
+
+"lru.min@npm:^1.0.0":
+  version: 1.1.2
+  resolution: "lru.min@npm:1.1.2"
+  checksum: 64f0cbb155899b62e57b5f0f1e69d5427252cf87cd1dd2ba87d6768da7636ba1e459bd6b97a7632cf50ee9ede927809dab5c50ab76651d56c3cbf970d1b08f5c
   languageName: node
   linkType: hard
 
@@ -27121,6 +27213,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mysql2@npm:3.14.1, mysql2@npm:^3.14.1":
+  version: 3.14.1
+  resolution: "mysql2@npm:3.14.1"
+  dependencies:
+    aws-ssl-profiles: ^1.1.1
+    denque: ^2.1.0
+    generate-function: ^2.3.1
+    iconv-lite: ^0.6.3
+    long: ^5.2.1
+    lru.min: ^1.0.0
+    named-placeholders: ^1.1.3
+    seq-queue: ^0.0.5
+    sqlstring: ^2.3.2
+  checksum: e535629ee98b96366abcdd26774af18cc062e2b9c2bea94cb7e6af85ed49321b0d347c77e432a3d7776de973817298c1bcafe8a822cd34a2a9ddf616e7c36eba
+  languageName: node
+  linkType: hard
+
 "mz@npm:^2.7.0":
   version: 2.7.0
   resolution: "mz@npm:2.7.0"
@@ -27129,6 +27238,15 @@ __metadata:
     object-assign: ^4.0.1
     thenify-all: ^1.0.0
   checksum: 103114e93f87362f0b56ab5b2e7245051ad0276b646e3902c98397d18bb8f4a77f2ea4a2c9d3ad516034ea3a56553b60d3f5f78220001ca4c404bd711bd0af39
+  languageName: node
+  linkType: hard
+
+"named-placeholders@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "named-placeholders@npm:1.1.3"
+  dependencies:
+    lru-cache: ^7.14.1
+  checksum: cd83b4bbdf358b2285e3c51260fac2039c9d0546632b8a856b3eeabd3bfb3d5b597507ab319b97c281a4a70d748f38bc66fa218a61cb44f55ad997ad5d9c9935
   languageName: node
   linkType: hard
 
@@ -31692,6 +31810,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"seq-queue@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "seq-queue@npm:0.0.5"
+  checksum: ec870fc392f0e6e99ec0e551c3041c1a66144d1580efabae7358e572de127b0ad2f844c95a4861d2e6203f836adea4c8196345b37bed55331ead8f22d99ac84c
+  languageName: node
+  linkType: hard
+
 "serialize-javascript@npm:^4.0.0":
   version: 4.0.0
   resolution: "serialize-javascript@npm:4.0.0"
@@ -32295,7 +32420,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sqlstring@npm:2.3.3":
+"sqlstring@npm:2.3.3, sqlstring@npm:^2.3.2":
   version: 2.3.3
   resolution: "sqlstring@npm:2.3.3"
   checksum: 3b5dd7badb3d6312f494cfa6c9a381ee630fbe3dbd571c4c9eb8ecdb99a7bf5a1f7a5043191d768797f6b3c04eed5958ac6a5f948b998f0a138294c6d3125fbd

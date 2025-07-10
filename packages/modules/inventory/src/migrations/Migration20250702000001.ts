@@ -9,11 +9,6 @@ export class AddStoreIdToInventory20241201000001 extends Migration {
     `)
 
     this.addSql(`
-      ALTER TABLE "inventory_level"
-      ADD COLUMN "store_id" varchar(255) NOT NULL DEFAULT 'store_01JYQRW9Y4R1H07N8PQ0VJPW3T';
-    `)
-
-    this.addSql(`
       ALTER TABLE "reservation_item"
       ADD COLUMN "store_id" varchar(255) NOT NULL DEFAULT 'store_01JYQRW9Y4R1H07N8PQ0VJPW3T';
     `)
@@ -24,11 +19,6 @@ export class AddStoreIdToInventory20241201000001 extends Migration {
     // Remove store_id column
     this.addSql(`
       ALTER TABLE "inventory_item" 
-      DROP COLUMN IF EXISTS "store_id";
-    `)
-
-    this.addSql(`
-      ALTER TABLE "inventory_level" 
       DROP COLUMN IF EXISTS "store_id";
     `)
 
